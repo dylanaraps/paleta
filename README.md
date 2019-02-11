@@ -6,6 +6,26 @@ Change terminal colors on the fly.
 
 A list of hex colors are supplied via command-line arguments, `stdin` or a file and `pal` sends these colors to all open terminals, modifying their palette. The purpose of this tool is to allow theme managers and individual scripts to effortlessly modify the current color-scheme without needing a reload of running terminals.
 
+## Dependencies
+
+- `bash`
+
+## Installation
+
+- Add `pal` to your path.
+
+**Full Installation.**
+
+1. Download `pal`.
+    - Release: https://github.com/dylanaraps/pal/releases/latest
+    - Git: `git clone https://github.com/dylanaraps/pal`
+2. Change working directory to `pal`.
+    - `cd pal`
+3. Run `make install` inside the script directory to install the script.
+    - **NOTE**: You may have to run this as root.
+
+**NOTE:** `pal` can be uninstalled easily using `make uninstall`. This removes all of files from your system.
+
 ## Usage
 
 `pal` takes `16` colors as input. Color `0` is assumed to be the background color and color `15` is assumed to be the foreground color. When less than `16` colors are supplied, `pal` repeats the last color till `16`.
