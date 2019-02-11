@@ -38,7 +38,7 @@ Add the following line to your shell configuration file.
 
 ```sh
 # Inside .bashrc, .zshrc, .profile or equivalent.
-pal -r
+(pal -r &)
 ```
 
 ## TODO
