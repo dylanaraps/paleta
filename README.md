@@ -6,7 +6,7 @@ A list of hex colors are supplied via command-line arguments, `stdin` or a file 
 
 ## Usage
 
-`pal` takes `16` colors as input. Color `0` is assumed to be the background color and Color `15` is assumed to be the foreground color. When less than `16` colors are supplied, `pal` repeats the last color till `16`.
+`pal` takes `16` colors as input. Color `0` is assumed to be the background color and color `15` is assumed to be the foreground color. When less than `16` colors are supplied, `pal` repeats the last color till `16`.
 
 **NOTE**: The input colors can optionally contain `#`, it doesn't matter.
 
