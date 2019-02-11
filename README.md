@@ -1,4 +1,4 @@
-# pal (Name Pending)
+# pal
 
 <a href="https://travis-ci.org/dylanaraps/pal"><img src="https://travis-ci.org/dylanaraps/pal.svg?branch=master"></a>
 
