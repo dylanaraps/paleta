@@ -31,14 +31,14 @@ read_input() {
     # Input from stdin.
     [[ -t 0 ]] ||
         IFS=$'\n ' read -d "" -ra input </dev/stdin
+}
 
+parse_colors() {
     [[ -z ${input[0]} ]] && {
         printf '%s\n' "error: No colors specified." >&2
         exit 1
     }
-}
 
-parse_colors() {
     ((${#input[@]} > 16)) && {
         printf '%s\n' "warn: Too many colors specified, ignoring past 16th." >&2
         max_cols=16
@@ -108,7 +108,7 @@ main() {
     read_input "$@"
     parse_colors
     make_sequences
-    send_sequences
+    send_sequences &
 }
 
 main "$@"
