@@ -58,4 +58,3 @@ Add the following line to your shell configuration file.
 ## TODO
 
 - [x] TTY support.
-- [ ] macOS support.
