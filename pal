@@ -64,6 +64,10 @@ make_sequences() {
     # Colors 0-15.
     for ((i=0;i<${#colors[@]};i++)); {
         sequences+="\\e]4;${i};${colors[i]}\\e\\\\"
+
+        # Linux console.
+        printf -v hex '%X' "$i"
+        sequences_tty+="\\e]P${hex}${colors[i]/\#}"
     }
 
     # 10: Foreground color,
@@ -79,21 +83,33 @@ make_sequences() {
     #  Skip this sequence if running in VTE.)
     [[ -z $VTE_VERSION ]] &&
         sequences+="\\e]708;${colors[0]}\\e\\\\"
+
+    # When changing colors in the linux console
+    # a clear screen is needed afterwards.
+    sequences_tty+="\\e[2J\\e[H"
 }
 
 send_sequences() {
     # Send the sequences to all open terminals.
-    for tty in /dev/pts/[0-9]*; do
-        [[ -w $tty ]] &&
-            printf '%b' "$sequences" > "$tty" &
-    done
+    [[ $TERM != linux ]] &&
+        for tty in /dev/pts/[0-9]*; do
+            [[ -w $tty ]] &&
+                printf '%b' "$sequences" > "$tty" &
+        done
+
+    [[ $TERM == linux ]] &&
+        printf '%b' "$sequences_tty"
 
     printf '%b' "$sequences" > "${cache_dir}/colors"
+    printf '%b' "$sequences_tty" > "${cache_dir}/colors-tty"
 }
 
 load_sequences() {
     # Load already generated sequences.
-    [[ -f ${cache_dir}/colors ]] &&
+    [[ $TERM == linux && -f ${cache_dir}/colors-tty ]] &&
+        printf '%b' "$(< "${cache_dir}/colors-tty")"
+
+    [[ $TERM != linux && -f ${cache_dir}/colors ]] &&
         printf '%b' "$(< "${cache_dir}/colors")"
 }
 
