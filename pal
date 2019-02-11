@@ -59,7 +59,7 @@ make_sequences() {
     sequences+="\\e]11;${colors[0]}\\e\\\\"
 
     # Cursor Foreground color.
-    sequences+="\\e]12;${colors[0]}\\e\\\\"
+    sequences+="\\e]12;${colors[15]}\\e\\\\"
 
     # Border Background color (URxvt).
     # (VTE doesn't handle unknown sequences very well.
