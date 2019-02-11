@@ -1,6 +1,6 @@
 # pal (Name Pending)
 
-A unix-style program to change terminal color-schemes on the fly.
+Change terminal colors on the fly.
 
 A list of hex colors are supplied via command-line arguments, `stdin` or a file and `pal` sends these colors to all open terminals, modifying their palette. The purpose of this tool is to allow theme managers and individual scripts to effortlessly modify the current color-scheme without needing a reload of running terminals.
 
