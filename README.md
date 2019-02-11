@@ -1,4 +1,4 @@
-# pal
+# pal (Name Pending)
 
 A unix-style program to change terminal color-schemes on the fly.
 
