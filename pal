@@ -34,7 +34,7 @@ read_input() {
 
     # Invalid arguments.
     [[ $* == *-* || -z $1 && -z ${input[0]} ]] && {
-        printf '%s\n' "usage: pal -r, pal -v, pal [colors]"
+        printf '%s\n' "usage: pal -r, pal -v, pal [colors], pal file"
         printf '%s\n' "  - [colors] a space separated list of hex colors."
         exit 1
     }
