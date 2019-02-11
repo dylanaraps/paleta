@@ -70,10 +70,10 @@ make_sequences() {
 
 send_sequences() {
     # Send the sequences to all open terminals.
-    for tty in /dev/pts/[0-9]*; {
+    for tty in /dev/pts/[0-9]*; do
         [[ -w $tty ]] &&
             printf '%b' "$sequences" > "$tty" &
-    }
+    done
 
     printf '%b' "$sequences" > "${cache_dir}/colors"
 }
