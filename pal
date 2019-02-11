@@ -100,10 +100,8 @@ load_sequences() {
 }
 
 main() {
-    mkdir -p "${cache_dir:=${XDG_CACHE_HOME:=${HOME}/.cache}/pal}" || {
-        printf '%s\n' "error: Couldn't create directory [${cache_dir}]." >&2
-        exit 1
-    }
+    [[ ! -d ${cache_dir:=${XDG_CACHE_HOME:=${HOME}/.cache}/pal} ]] &&
+        mkdir -p "$cache_dir"
 
     read_input "$@"
     parse_colors
