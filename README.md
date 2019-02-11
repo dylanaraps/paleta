@@ -20,6 +20,7 @@ pal 1f221f a0ab9e b6bfb4 67a96c 90a992 79a985 47a961 c7c7c7 575957 a0ab9e b6bfb4
 pal "1f221f a0ab9e b6bfb4 67a96c 90a992 79a985 47a961 c7c7c7 575957 a0ab9e b6bfb4 67a96c 90a992 79a985 47a961 c7c7c7"
 
 # arguments (file)
+# Colors inside of a file can be separated by either new-lines or spaces.
 pal file
 
 
