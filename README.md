@@ -54,7 +54,3 @@ Add the following line to your shell configuration file.
 # Inside .bashrc, .zshrc, .profile or equivalent.
 (pal -r &)
 ```
-
-## TODO
-
-- [x] TTY support.
