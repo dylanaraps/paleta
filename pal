@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# wash - change terminal colors on the fly.
+# pal - change terminal colors on the fly.
 
 read_input() {
     # Input from space separated arguments.
