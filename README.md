@@ -57,5 +57,5 @@ Add the following line to your shell configuration file.
 
 ## TODO
 
-- [ ] TTY support.
+- [x] TTY support.
 - [ ] macOS support.
