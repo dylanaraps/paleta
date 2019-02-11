@@ -69,13 +69,11 @@ make_sequences() {
         sequences+="\\e]4;${i};${colors[i]}\\e\\\\"
     }
 
-    # Foreground color.
+    # 10: Foreground color,
+    # 11: Background color,
+    # 12: Cursor Foreground color.
     sequences+="\\e]10;${colors[15]}\\e\\\\"
-
-    # Background color.
     sequences+="\\e]11;${colors[0]}\\e\\\\"
-
-    # Cursor Foreground color.
     sequences+="\\e]12;${colors[15]}\\e\\\\"
 
     # Border Background color (URxvt).
