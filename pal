@@ -65,6 +65,7 @@ make_sequences() {
     # 10: Foreground color,
     # 11: Background color,
     # 12: Cursor Foreground color.
+    # Source: https://goo.gl/KcoQgP
     sequences+="\\e]10;${colors[15]}\\e\\\\"
     sequences+="\\e]11;${colors[0]}\\e\\\\"
     sequences+="\\e]12;${colors[15]}\\e\\\\"
