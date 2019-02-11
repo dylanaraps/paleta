@@ -3,17 +3,34 @@
 # pal - change terminal colors on the fly.
 
 read_input() {
+    # Read command-line arguments.
+    [[ $1 == -v ]] && {
+        printf '%s\n' "pal 0.1.0"
+        exit
+    }
+
+    [[ $1 == -r ]] && {
+        load_sequences
+        exit
+    }
+
+    [[ $* == *-* ]] && {
+        printf '%s\n' "usage: pal -r, pal -v, pal [colors]"
+        exit 1
+    }
+
     # Input from space separated arguments.
-    [[ $1 ]] &&
+    [[ $1 ]] && {
         input=("$@")
 
-    # Input from single string.
-    ((${#input[@]} == 1 && ${#input[0]} > 7)) &&
-        read -ra input <<< "${input[*]}"
+        # Input from single string.
+        ((${#input[@]} == 1 && ${#input[0]} > 7)) &&
+            read -ra input <<< "${input[*]}"
+    }
 
     # Input from stdin.
     [[ -t 0 ]] ||
-        IFS=$'\n ' read -d "" -ra input < /dev/stdin
+        IFS=$'\n ' read -d "" -ra input </dev/stdin
 
     [[ -z ${input[0]} ]] && {
         printf '%s\n' "error: No colors specified." >&2
@@ -88,16 +105,6 @@ main() {
     mkdir -p "${cache_dir:=${XDG_CACHE_HOME:=${HOME}/.cache}/wash}" || {
         printf '%s\n' "error: Couldn't create directory [${cache_dir}]." >&2
         exit 1
-    }
-
-    [[ $1 == -v ]] && {
-        printf '%s\n' "pal 0.1.0"
-        exit
-    }
-
-    [[ $1 == -r ]] && {
-        load_sequences
-        exit
     }
 
     read_input "$@"
