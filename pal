@@ -20,7 +20,7 @@ read_input() {
     }
 
     # Input from space separated arguments.
-    [[ $1 ]] && {
+    [[ -n $1 ]] && {
         input=("$@")
 
         # Input from single string.
@@ -45,13 +45,13 @@ parse_colors() {
     }
 
     ((${#input[@]} < 16)) && {
-        printf '%s\n' "warn: Too few colors specified, repeating last color." >&2
+        printf '%s\n' "warn: Too few colors given, repeating last color." >&2
         max_cols=16
     }
 
     for ((i=0;i<${max_cols:=${#input[@]}};i++)); {
         [[ ${input[i]:-000000} =~ ^#?[a-fA-F0-9]{6}$ ]] || {
-            printf '%s\n' "error: Color [$((i+1))] is not a valid hex color." >&2
+            printf '%s\n' "error: Color [$((i+1))] isn't a valid hex color." >&2
             exit 1
         }
 
