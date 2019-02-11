@@ -22,6 +22,10 @@ read_input() {
         # Input from single string.
         ((${#input[@]} == 1 && ${#input[0]} > 7)) &&
             read -ra input <<< "${input[*]}"
+
+        # Input from file argument.
+        (($# == 1)) && [[ -f $1 ]] &&
+            IFS=$'\n ' read -d "" -ra input < "$1"
     }
 
     # Input from stdin.

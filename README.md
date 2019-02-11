@@ -11,8 +11,7 @@ A list of hex colors are supplied via command-line arguments, `stdin` or a file 
 **NOTE**: The input colors can optionally contain `#`, it doesn't matter.
 
 ```sh
-# stdin
-echo 1f221f a0ab9e b6bfb4 67a96c 90a992 79a985 47a961 c7c7c7 575957 a0ab9e b6bfb4 67a96c 90a992 79a985 47a961 c7c7c7 | pal
+# ARGUMENTS
 
 # arguments
 pal 1f221f a0ab9e b6bfb4 67a96c 90a992 79a985 47a961 c7c7c7 575957 a0ab9e b6bfb4 67a96c 90a992 79a985 47a961 c7c7c7
@@ -20,12 +19,24 @@ pal 1f221f a0ab9e b6bfb4 67a96c 90a992 79a985 47a961 c7c7c7 575957 a0ab9e b6bfb4
 # arguments (string)
 pal "1f221f a0ab9e b6bfb4 67a96c 90a992 79a985 47a961 c7c7c7 575957 a0ab9e b6bfb4 67a96c 90a992 79a985 47a961 c7c7c7"
 
-# file
+# arguments (file)
+pal file
+
+
+# STDIN
+
+# stdin
+echo 1f221f a0ab9e b6bfb4 67a96c 90a992 79a985 47a961 c7c7c7 575957 a0ab9e b6bfb4 67a96c 90a992 79a985 47a961 c7c7c7 | pal
+
+# stdin (file)
 # Colors inside of a file can be separated by either new-lines or spaces.
 pal < file
 
-# string (stdin)
+# stdin (string)
 pal <<< "1f221f a0ab9e b6bfb4 67a96c 90a992 79a985 47a961 c7c7c7 575957 a0ab9e b6bfb4 67a96c 90a992 79a985 47a961 c7c7c7"
+
+
+# EXTRA
 
 # Two tone palette.
 # Color 0 is black and colors 1-15 are white.
