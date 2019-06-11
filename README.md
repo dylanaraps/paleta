@@ -69,4 +69,7 @@ Add the following line to your shell configuration file.
 ```sh
 # Inside .bashrc, .zshrc, .profile or equivalent.
 (pal -r &)
+
+# Faster more verbose method (bash only).
+{ read -r < ~/.cache/pal/colors; printf %b "$REPLY"; } & disown
 ```
