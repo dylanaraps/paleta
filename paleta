@@ -1,22 +1,20 @@
 #!/usr/bin/env bash
 #
-# pal - change terminal colors on the fly.
+# paleta - change terminal colors on the fly.
 
 read_input() {
-    # Read command-line arguments.
     [[ $1 == -v ]] && {
-        printf '%s\n' "pal 0.1.0"
+        printf 'paleta 1.0.0\n'
         exit
     }
 
-    # Reload colors.
     [[ $1 == -r ]] && {
         load_sequences
         exit
     }
 
     # Input from space separated arguments.
-    [[ -n $1 ]] && {
+    [[ $1 ]] && {
         input=("$@")
 
         # Input from single string.
@@ -29,25 +27,23 @@ read_input() {
     }
 
     # Input from stdin.
-    [[ -z $1 ]] &&
-        IFS=$'\n ' read -d "" -ra input </dev/stdin
+    [[ $1 ]] || IFS=$'\n ' read -d "" -ra input </dev/stdin
 
-    # Invalid arguments.
     [[ $* == *-* || -z $1 && -z ${input[0]} ]] && {
-        printf '%s\n' "usage: pal -r, pal -v, pal [colors], pal file"
-        printf '%s\n' "  - [colors] a space separated list of hex colors."
+        printf 'usage: paleta -r, paleta [colors], paleta file\n'
+        printf '  - [colors] a space separated list of hex colors.\n'
         exit 1
     }
 }
 
 parse_colors() {
     ((${#input[@]} > 16)) &&
-        printf '%s\n' "warn: Too many colors specified, ignoring past 16th." >&2
+        printf 'warn: Too many colors specified, ignoring past 16th.\n' >&2
 
     ((${#input[@]} < 16)) &&
-        printf '%s\n' "warn: Too few colors given, repeating last color." >&2
+        printf 'warn: Too few colors given, repeating last color.\n' >&2
 
-    for ((i=0;i<16;i++)); {
+    for ((i=0; i<16; i++)); {
         [[ ${input[i]:-000000} =~ ^#?[a-fA-F0-9]{6}$ ]] || {
             printf '%s\n' "error: Color [$((i+1))] isn't a valid hex color." >&2
             exit 1
@@ -55,50 +51,46 @@ parse_colors() {
 
         # Use the last defined color for all colors if less than
         # 16 colors were given as input.
-        colors[i]="${input[i]:-${input[-1]}}"
-        colors[i]="#${colors[i]//\#}"
+        colors[i]=${input[i]:-${input[-1]}}
+        colors[i]=\#${colors[i]//\#}
     }
 }
 
 make_sequences() {
     # Colors 0-15.
     for ((i=0;i<${#colors[@]};i++)) {
-        sequences+="\\e]4;${i};${colors[i]}\\e\\\\"
+        sequences+="]4;${i};${colors[i]}\\"
     }
 
     # 10: Foreground color,
     # 11: Background color,
     # 12: Cursor Foreground color.
     # Source: https://goo.gl/KcoQgP
-    sequences+="\\e]10;${colors[15]}\\e\\\\"
-    sequences+="\\e]11;${colors[0]}\\e\\\\"
-    sequences+="\\e]12;${colors[15]}\\e\\\\"
+    sequences+="]10;${colors[15]}\\"
+    sequences+="]11;${colors[0]}\\"
+    sequences+="]12;${colors[15]}\\"
 
     # Border Background color (URxvt).
     # (VTE doesn't handle unknown sequences very well.
     #  Skip this sequence if running in VTE.)
-    sequences+="\\e]708;${colors[0]}\\e\\\\"
+    [[ $VTE_VERSION ]] || sequences+="]708;${colors[0]}\\"
 }
 
 send_sequences() {
-    # Send the sequences to all open terminals.
     for tty in /dev/pts/[0-9]*; do
-        [[ -w $tty ]] &&
-            printf '%b' "$sequences" > "$tty" &
+        [[ -w $tty ]] && printf %b "$sequences" > "$tty" &
     done
 
-    printf '%b' "$sequences" > "${cache_dir}/colors"
+    printf %b "$sequences" > "$cache_dir/colors"
 }
 
 load_sequences() {
-    # Load already generated sequences.
-    [[ -f ${cache_dir}/colors ]] &&
-        printf '%b' "$(< "${cache_dir}/colors")"
+    [[ -f $cache_dir/colors ]] &&
+        printf %b "$(< "${cache_dir}/colors")"
 }
 
 main() {
-    [[ ! -d ${cache_dir:=${XDG_CACHE_HOME:=${HOME}/.cache}/pal} ]] &&
-        mkdir -p "$cache_dir"
+    mkdir -p "${cache_dir:=${XDG_CACHE_HOME:=${HOME}/.cache}/paleta}"
 
     read_input "$@"
     parse_colors
