@@ -37,13 +37,13 @@ read_input() {
 }
 
 parse_colors() {
-    ((${#input[@]} > 16)) &&
-        printf 'warn: Too many colors specified, ignoring past 16th.\n' >&2
+    ((${#input[@]} > 19)) &&
+        printf 'warn: Too many colors specified, ignoring past 19th.\n' >&2
 
     ((${#input[@]} < 16)) &&
         printf 'warn: Too few colors given, repeating last color.\n' >&2
 
-    for ((i=0; i<16; i++)); {
+    for ((i=0; i<19; i++)); {
         [[ ${input[i]:-000000} =~ ^#?[a-fA-F0-9]{6}$ ]] || {
             printf '%s\n' "error: Color [$((i+1))] isn't a valid hex color." >&2
             exit 1
@@ -51,8 +51,11 @@ parse_colors() {
 
         # Use the last defined color for all colors if less than
         # 16 colors were given as input.
-        colors[i]=${input[i]:-${input[-1]}}
-        colors[i]=\#${colors[i]//\#}
+        ((i < 16)) \
+            && colors[i]=${input[i]:-${input[-1]}} \
+            || colors[i]=${input[i]}
+
+        [[ -n "${colors[i]}" ]] && colors[i]=\#${colors[i]//\#}
     }
 }
 
@@ -66,9 +69,9 @@ make_sequences() {
     # 11: Background color,
     # 12: Cursor Foreground color.
     # Source: https://goo.gl/KcoQgP
-    sequences+="]10;${colors[15]}\\"
-    sequences+="]11;${colors[0]}\\"
-    sequences+="]12;${colors[15]}\\"
+    sequences+="]10;${colors[16]:-${colors[15]}}\\"
+    sequences+="]11;${colors[17]:-${colors[0]}}\\"
+    sequences+="]12;${colors[18]:-${colors[15]}}\\"
 
     # Border Background color (URxvt).
     # (VTE doesn't handle unknown sequences very well.

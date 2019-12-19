@@ -15,7 +15,7 @@ paleta \- change terminal colors on the fly
 .IR file ...
 .SH DESCRIPTION
 .B paleta
-takes 16 colors as input. Color 0 is assumed to be the background color and color 15 is assumed to be the foreground color. When less than 16 colors are supplied, paleta repeats the last color till 16.
+takes 16 to 19 colors as input. If supplied, colors 17, 18, and 19 are used for the foreground, background, and cursor color, respectively. Colors 17 and 19 will default to color 15, and color 18 will default to color 0. When less than 16 colors are supplied, paleta repeats the last color till 16.
 
 A list of hex colors are supplied via command-line arguments, stdin or a file and paleta sends these colors to all open terminals, modifying their palette. The purpose of this tool is to allow theme managers and individual scripts to effortlessly modify the current color-scheme without needing a reload of running terminals.
 
