@@ -24,7 +24,7 @@ A list of hex colors are supplied via command-line arguments, `stdin` or a file 
 
 ## Usage
 
-`paleta` takes `16` to `19` colors as input. If supplied, colors `17`, `18`, and `19` are used for the foreground, background, and cursor color, respectively. Colors `17` and `19` will default to color `15`, and color `18` will default to color `0`. When less than `16` colors are supplied, `paleta` repeats the last color till `16`.
+`paleta` takes `16` to `19` colors as input. If supplied, arguments `17`, `18`, and `19` are used for the foreground, background, and cursor color, respectively. The foreground and cursor color will default to color `15`, and the background color will default to color `0`. When less than `16` colors are supplied, `paleta` repeats the last color till `16`.
 
 **NOTE**: The input colors can optionally contain `#`, it doesn't matter.
 
