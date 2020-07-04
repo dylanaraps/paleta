@@ -8,9 +8,8 @@ case $1 in
     -h) printf 'usage: paleta -r, paleta [col]...\n'; exit 1 ;;
     -r) cat "$cache_dir/colors" 2>/dev/null; exit ;;
     -v) printf 'paleta 1.0.0\n'; exit ;;
+     *) set -- ;;
 esac
-
-set --
 
 while read -r col; do
     [ "$#" -gt 16 ] && {
@@ -38,9 +37,7 @@ done
 
 # 10: Foreground color, 11: Background color, 12: Cursor Foreground color.
 # Source: https://goo.gl/KcoQgP
-seq="$seq]10;${15}\\"
-seq="$seq]11;$1\\"
-seq="$seq]12;${15}\\"
+seq="$seq]10;${15}\\]11;$1\\]12;${15}\\"
 
 # Border Background color (various terminals).
 # Skip this sequence if running in VTE.)
