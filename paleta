@@ -1,101 +1,55 @@
-#!/usr/bin/env bash
+#!/bin/sh
 #
 # paleta - change terminal colors on the fly.
 
-read_input() {
-    [[ $1 == -v ]] && {
-        printf 'paleta 1.0.0\n'
-        exit
+mkdir -p "${cache_dir:=${XDG_CACHE_HOME:=${HOME}/.cache}/paleta}"
+
+case $1 in
+    -h) printf 'usage: paleta -r, paleta [col]...\n'; exit 1 ;;
+    -r) cat "$cache_dir/colors" 2>/dev/null; exit ;;
+    -v) printf 'paleta 1.0.0\n'; exit ;;
+esac
+
+set --
+
+while read -r col; do
+    [ "$#" -gt 16 ] && {
+        printf 'warn: more than 16 colors given, ignoring excess\n' >&2
+        break
     }
 
-    [[ $1 == -r ]] && {
-        load_sequences
-        exit
-    }
+    set -- "$@" "$col"
+done
 
-    # Input from space separated arguments.
-    [[ $1 ]] && {
-        input=("$@")
+[ "$#" -lt 16 ] && {
+    printf 'warn: less than 16 colors given, duplicating input\n' >&2
 
-        # Input from single string.
-        ((${#input[@]} == 1 && ${#input[0]} > 7)) &&
-            read -ra input <<< "${input[*]}"
-
-        # Input from file argument.
-        (($# == 1)) && [[ -f $1 ]] &&
-            IFS=$'\n ' read -d "" -ra input < "$1"
-    }
-
-    # Input from stdin.
-    [[ $1 ]] || IFS=$'\n ' read -d "" -ra input </dev/stdin
-
-    [[ $* == *-* || -z $1 && -z ${input[0]} ]] && {
-        printf 'usage: paleta -r, paleta [colors], paleta file\n'
-        printf '  - [colors] a space separated list of hex colors.\n'
-        exit 1
-    }
-}
-
-parse_colors() {
-    ((${#input[@]} > 16)) &&
-        printf 'warn: Too many colors specified, ignoring past 16th.\n' >&2
-
-    ((${#input[@]} < 16)) &&
-        printf 'warn: Too few colors given, repeating last color.\n' >&2
-
-    for ((i=0; i<16; i++)); {
-        [[ ${input[i]:-000000} =~ ^#?[a-fA-F0-9]{6}$ ]] || {
-            printf '%s\n' "error: Color [$((i+1))] isn't a valid hex color." >&2
-            exit 1
-        }
-
-        # Use the last defined color for all colors if less than
-        # 16 colors were given as input.
-        colors[i]=${input[i]:-${input[-1]}}
-        colors[i]=\#${colors[i]//\#}
-    }
-}
-
-make_sequences() {
-    # Colors 0-15.
-    for ((i=0;i<${#colors[@]};i++)) {
-        sequences+="]4;${i};${colors[i]}\\"
-    }
-
-    # 10: Foreground color,
-    # 11: Background color,
-    # 12: Cursor Foreground color.
-    # Source: https://goo.gl/KcoQgP
-    sequences+="]10;${colors[15]}\\"
-    sequences+="]11;${colors[0]}\\"
-    sequences+="]12;${colors[15]}\\"
-
-    # Border Background color (URxvt).
-    # (VTE doesn't handle unknown sequences very well.
-    #  Skip this sequence if running in VTE.)
-    [[ $VTE_VERSION ]] || sequences+="]708;${colors[0]}\\"
-}
-
-send_sequences() {
-    for tty in /dev/pts/[0-9]*; do
-        [[ -w $tty ]] && printf %b "$sequences" > "$tty" &
+    while [ "$#" -lt 16 ]; do
+        set -- "$@" "${2:-FFFFFF}"
     done
-
-    printf %b "$sequences" > "$cache_dir/colors"
 }
 
-load_sequences() {
-    [[ -f $cache_dir/colors ]] &&
-        printf %b "$(< "${cache_dir}/colors")"
-}
+for col do
+    seq="$seq]4;${i:=0};#${col#\#}\\"
 
-main() {
-    mkdir -p "${cache_dir:=${XDG_CACHE_HOME:=${HOME}/.cache}/paleta}"
+    : "$((i+=1))"
+done
 
-    read_input "$@"
-    parse_colors
-    make_sequences
-    send_sequences &
-}
+# 10: Foreground color,
+# 11: Background color,
+# 12: Cursor Foreground color.
+# Source: https://goo.gl/KcoQgP
+seq="$seq]10;${15}\\"
+seq="$seq]11;$1\\"
+seq="$seq]12;${15}\\"
 
-main "$@"
+# Border Background color (URxvt).
+# (VTE doesn't handle unknown sequences very well.
+#  Skip this sequence if running in VTE.)
+[ "$VTE_VERSION" ] || seq="$seq]708;$1\\"
+
+for tty in /dev/pts/[0-9]*; do
+    [ -w "$tty" ] && printf %b "$seq" > "$tty" &
+done
+
+printf %b "$seq" > "$cache_dir/colors"
