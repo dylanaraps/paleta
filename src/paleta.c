@@ -12,13 +12,8 @@ void pal_read() {
     char c;
     int color = 0;
     int num = 0;
-    int ret;
 
-    while ((ret = fscanf(stdin, "%c", &c)) != EOF) {
-        if (ret != 1) {
-            die("failed to read from stdin");
-        }
-
+    while ((c = fgetc(stdin)) != EOF) {
         if ((c >= 'A' && c <= 'F') ||
             (c >= 'a' && c <= 'f') ||
             (c >= '0' && c <= '9')) {
@@ -29,20 +24,19 @@ void pal_read() {
 
             strcpy(&pal[num][color], &c);
             pal[num][MAX_COL] = 0;
-
             color++;
 
         } else if (c == '\n') {
-           if (color < MAX_COL) {
-               die("invalid input found on stdin");
-           }
+            if (color < MAX_COL) {
+                die("invalid input found on stdin");
+            }
 
-           color = 0;
-           num++;
+            color = 0;
+            num++;
 
-           if (num > MAX_PAL) {
-               break;
-           }
+            if (num > MAX_PAL) {
+                break;
+            }
 
         } else if (c == '#') {
             continue;
