@@ -18,3 +18,4 @@
 /* there should be no reason to change these */
 #define FMT_SPE "\033]%d;#%s\033\\"
 #define FMT_NUM "\033]4;%d;#%s\033\\"
+#define FMT_708 "\033]708;#%s\033\\"

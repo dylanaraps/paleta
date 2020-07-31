@@ -70,10 +70,18 @@ static char *pal_morph(const int max_cols) {
     char *seq;
     int ret;
 
+    /* + 1 is extra 708 sequence */
     seq = calloc(MAX_SEQ * (max_cols + 1), 1);
 
     if (!seq) {
         printf("failed to allocate memory\n");
+        exit(1);
+    }
+
+    ret = snprintf(seq, MAX_SEQ, FMT_708, palette[0]);
+
+    if (ret < 0) {
+        printf("failed to construct sequences\n");
         exit(1);
     }
 
