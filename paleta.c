@@ -56,9 +56,8 @@ static int pal_read() {
 
     free(line);
 
-    printf("bg = %s, fg = %s, \033[7m \033[m = %s\n",
-        pal[0], pal[1], pal[2]);
-    printf("colors %d/%d\n", i - 3, MAX_PAL - 3);
+    printf("read 3 special colors\n");
+    printf("read %d/%d colors\n", i - 3, MAX_PAL -3);
 
     return i;
 }
@@ -74,6 +73,7 @@ static size_t seq_add(char **seq, const size_t len, const char *fmt,
         exit(1);
     }
 
+    /* todo: not every element */
     *seq = realloc(*seq, len + ret);
 
     if (!*seq) {
