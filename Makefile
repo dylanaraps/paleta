@@ -2,15 +2,23 @@
 
 PREFIX       = /usr/local
 ALL_WARNINGS = -Wall -Wextra -pedantic -Wmissing-prototypes -Wstrict-prototypes
-ALL_CFLAGS   = $(CFLAGS) $(CPPFLAGS) -std=c99 -O3 -static $(ALL_WARNINGS)
+ALL_CFLAGS   = $(CFLAGS) $(CPPFLAGS) -O0 -g -static -std=c99 $(ALL_WARNINGS)
 ALL_LDFLAGS  = $(LDFLAGS) $(LIBS)
 
-all:
-	$(CC) $(ALL_CFLAGS) -o paleta src/paleta.c $(ALL_LDFLAGS)
+OBJ = src/log.o src/paleta.o
+HDR = src/log.h
 
-install:
-	mkdir -p  $(DESTDIR)$(PREFIX)/bin
-	cp paleta $(DESTDIR)$(PREFIX)/bin/
+.c.o:
+	$(CC) $(ALL_CFLAGS) -c -o $@ $<
+
+paleta: $(OBJ)
+	$(CC) $(ALL_CFLAGS) -o $@ $(OBJ) $(ALL_LDFLAGS)
+
+$(OBJ): $(HDR)
+
+install: paleta
+	mkdir -p $(DESTDIR)$(PREFIX)/bin
+	cp paleta  $(DESTDIR)$(PREFIX)/bin/
 
 clean:
 	rm -f paleta $(OBJ)

@@ -5,46 +5,36 @@
 #include <glob.h>
 
 #include "config.h"
+#include "log.h"
+#include "paleta.h"
 
-struct sequences {
-    size_t size;
-    size_t cap;
-    char *str;
-};
-
-char pal[MAX_PAL][MAX_COL + 1];
-
-static void pal_read(void);
-static void pal_morph(const int max_cols);
-static void pal_write(struct sequences *seq);
-
-static void seq_add(struct sequences *seq, const char *fmt, \
-             const int off, const char *col);
-
-static void pal_read() {
+void pal_read() {
     char c;
     int color = 0;
     int num = 0;
+    int ret;
 
-    while (fscanf(stdin, "%c", &c) != EOF) {
-       if ((c >= 'A' && c <= 'F') ||
-           (c >= 'a' && c <= 'f') ||
-           (c >= '0' && c <= '9')) {
+    while ((ret = fscanf(stdin, "%c", &c)) != EOF) {
+        if (ret != 1) {
+            die("failed to read from stdin");
+        }
 
-           if (color > MAX_COL) {
-               printf("invalid input found on stdin\n");
-               exit(1);
-           }
+        if ((c >= 'A' && c <= 'F') ||
+            (c >= 'a' && c <= 'f') ||
+            (c >= '0' && c <= '9')) {
 
-           strcpy(&pal[num][color], &c);
-           pal[num][MAX_COL] = 0;
+            if (color > MAX_COL) {
+                die("invalid input found on stdin");
+            }
 
-           color++;
+            strcpy(&pal[num][color], &c);
+            pal[num][MAX_COL] = 0;
 
-       } else if (c == '\n') {
+            color++;
+
+        } else if (c == '\n') {
            if (color < MAX_COL) {
-               printf("invalid input found on stdin\n");
-               exit(1);
+               die("invalid input found on stdin");
            }
 
            color = 0;
@@ -54,19 +44,18 @@ static void pal_read() {
                break;
            }
 
-       } else if (c == '#') {
-           continue;
+        } else if (c == '#') {
+            continue;
 
-       } else {
-           printf("invalid input found on stdin\n");
-           exit(1);
-       }
+        } else {
+            die("invalid input found on stdin");
+        }
     }
 
     pal_morph(num);
 }
 
-static void seq_add(struct sequences *seq, const char *fmt,
+void seq_add(struct sequences *seq, const char *fmt,
              const int off, const char *col) {
     int ret;
 
@@ -77,7 +66,7 @@ static void seq_add(struct sequences *seq, const char *fmt,
         seq->str  = realloc(seq->str, seq->cap);
 
         if (!seq->str) {
-            printf("failed to allocate memory\n");
+            die("failed to allocate memory");
             exit(1);
         }
     }
@@ -85,14 +74,13 @@ static void seq_add(struct sequences *seq, const char *fmt,
     ret = snprintf(seq->str + seq->size, ret, fmt, off, col);
 
     if (ret < 0) {
-        printf("failed to construct sequences\n");
-        exit(1);
+        die("failed to construct sequences");
     }
 
     seq->size += ret - 1;
 }
 
-static void pal_morph(const int max_cols) {
+void pal_morph(const int max_cols) {
     struct sequences seq = {
         .cap = 18, /* most frequent size */
     };
@@ -110,7 +98,7 @@ static void pal_morph(const int max_cols) {
     free(seq.str);
 }
 
-static void pal_write(struct sequences *seq) {
+void pal_write(struct sequences *seq) {
     glob_t buf;
 
     glob(PTS_GLOB, GLOB_NOSORT, NULL, &buf);
@@ -122,7 +110,7 @@ static void pal_write(struct sequences *seq) {
             fprintf(file, "%s", seq->str);
             fclose(file);
 
-            printf("sent output to %s\n", buf.gl_pathv[i]);
+            msg("sent output to %s", buf.gl_pathv[i]);
         }
     }
 
@@ -138,7 +126,7 @@ int main(int argc, char **argv) {
 
     switch (ret) {
         case 'v':
-            printf("paleta 0.1.0\n");
+            msg("paleta 0.1.0");
             break;
 
         case 0: {
@@ -147,10 +135,10 @@ int main(int argc, char **argv) {
         }
 
         default:
-            printf("usage: paleta -[hv] <stdin>\n\n");
-            printf("send [#]ffffff\\n over <stdin>.\n");
-            printf("- lines 1-3   = bg, fg, and cursor.\n");
-            printf("- lines 4-%d = palette (0-%d).\n", MAX_PAL, MAX_PAL - 3);
+            msg("usage: paleta -[hv] <stdin>\n");
+            msg("send [#]ffffff\\n over <stdin>.");
+            msg("- lines 1-3   = bg, fg, and cursor.");
+            msg("- lines 4-%d = palette (0-%d).", MAX_PAL, MAX_PAL - 3);
             break;
     }
 
