@@ -84,7 +84,8 @@ void pal_morph(const int max_cols) {
     char *fmt_spe = "\033]%d;#%s\033\\\\";
     char *fmt_pal = "\033]4;%d;#%s\033\\\\";
 
-    seq_add(&seq, "\033]%d;#%s\033\\\\", 708, pal[0]);
+    /* see: 1a651cf990e67c4046fbff7674249259bcaa89a8 */
+    seq_add(&seq, "\033]%d;#%s\033\\\\", 708, pal[1]);
 
     for (int i = 0; i < max_cols; i++) {
         char *fmt = i < 3 ? fmt_spe : fmt_pal;
