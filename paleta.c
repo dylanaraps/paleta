@@ -6,35 +6,41 @@
 
 #include "paleta.h"
 
+char *str_to_col(char *str) {
+    size_t size;
+
+    if (str[0] == '#') {
+        ++str;
+    }
+
+    size = strcspn(str, "\n");
+    str[size] = 0;
+
+    if (size > MAX_COL || size < MAX_COL) {
+        return NULL;
+    }
+
+    return str;
+}
+
 void pal_read() {
     char *line = 0;
     int i = 0;
 
     while ((getline(&line, &(size_t){0}, stdin) != -1)) {
-        size_t size;
         int ret;
 
-        if (line[0] == '#') {
-            ++line;
-        }
+        line = str_to_col(line);
 
-        size = strcspn(line, "\n");
-        line[size] = 0;
-
-        if (size > MAX_COL || size == 0) {
+        if (!line) {
             printf("invalid input found on stdin (line: %d)\n", i + 1);
             exit(1);
         }
 
         ret = snprintf(pal[i], MAX_COL + 1, "%s", line);
 
-        if (ret < 0) {
-            printf("failed to read from stdin\n");
-            exit(1);
-        }
-
         if (ret < MAX_COL) {
-            printf("invalid input found on stdin (line: %d)\n", i + 1);
+            printf("failed to read input (line: %d\n", i + 1);
             exit(1);
         }
 
@@ -59,9 +65,9 @@ void seq_add(struct sequences *seq, const char *fmt,
 
     ret = snprintf(NULL, 0, fmt, off, col);
 
-    if (seq->size + ret >= seq->cap) {
-        seq->cap = seq->cap ? seq->cap * 2 : 18;
-        seq->str = realloc(seq->str, seq->cap);
+    if (!seq->size || seq->size + ret >= seq->cap) {
+        seq->cap *= 2;
+        seq->str  = realloc(seq->str, seq->cap);
 
         if (!seq->str) {
             printf("failed to allocate memory\n");
@@ -80,7 +86,9 @@ void seq_add(struct sequences *seq, const char *fmt,
 }
 
 void pal_morph(const int max_cols) {
-    struct sequences seq = {0};
+    struct sequences seq = {
+        .cap = 18, /* most frequent size */
+    };
 
     seq_add(&seq, FMT_708, 708, pal[0]);
 
@@ -109,12 +117,6 @@ void pal_write(struct sequences *seq) {
 
             printf("sent output to %s\n", buf.gl_pathv[i]);
         }
-    }
-
-    FILE *f = fopen("/tmp/paleta", "w");
-    if (f) {
-        fprintf(f, "%s", seq->str);
-        fclose(f);
     }
 
     globfree(&buf);

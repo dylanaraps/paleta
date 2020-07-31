@@ -8,6 +8,8 @@ struct sequences {
     char *str;
 };
 
+char *str_to_col(char *str);
+
 void pal_read(void);
 void pal_morph(const int max_cols);
 void pal_write(struct sequences *seq);
