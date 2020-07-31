@@ -55,7 +55,7 @@ void seq_add(struct sequences *seq, const char *fmt,
 
     ret = snprintf(NULL, 0, fmt, off, col);
 
-    if (!seq->size || seq->size + ret >= seq->cap) {
+    if (!seq->size || (seq->size + ret) >= seq->cap) {
         seq->cap *= 2;
         seq->str  = realloc(seq->str, seq->cap);
 
@@ -104,7 +104,7 @@ void pal_write(struct sequences *seq) {
         FILE *file = fopen(buf.gl_pathv[i], "w");
 
         if (file) {
-            fprintf(file, "%s", seq->str);
+            fputs(seq->str, file);
             fclose(file);
 
             msg("sent output to %s", buf.gl_pathv[i]);
