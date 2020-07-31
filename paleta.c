@@ -6,12 +6,14 @@
 
 #include "config.h"
 
-static int  pal_read(void);
-static void pal_morph(const int max_cols);
-static void pal_write(void);
+static int   pal_read(void);
+static char *pal_morph(const int max_cols);
+static void  pal_write(char *seq);
+
+static size_t seq_add(char **seq, const size_t len, const char *fmt,
+                      const int off, const char *col);
 
 static char pal[MAX_PAL][MAX_COL + 1];
-static char seq[MAX_SEQ + 1]; /* todo lol */
 
 static int pal_read() {
     char *line = 0;
@@ -61,44 +63,51 @@ static int pal_read() {
     return i;
 }
 
-static void pal_morph(const int max_cols) {
+static size_t seq_add(char **seq, const size_t len, const char *fmt,
+                      const int off, const char *col) {
     int ret;
 
-    ret = snprintf(NULL, 0, FMT_708, pal[0]);
+    ret = snprintf(NULL, 0, fmt, off, col);
 
     if (ret < 0) {
         printf("failed to construct sequences\n");
         exit(1);
     }
 
-    ret = snprintf(seq, ret, FMT_708, pal[0]);
+    *seq = realloc(*seq, len + ret);
+
+    if (!*seq) {
+        printf("failed to allocate memory\n");
+        exit(1);
+    }
+
+    ret = snprintf(*seq + len, ret, fmt, off, col);
+
+    if (ret < 0) {
+        printf("failed to construct sequences\n");
+        exit(1);
+    }
+
+    return strlen(*seq);
+}
+
+static char *pal_morph(const int max_cols) {
+    char *seq = NULL;
+    int len = 0;
+
+    len = seq_add(&seq, 0, FMT_708, 708, pal[0]);
 
     for (int i = 0; i < max_cols; i++) {
-        size_t seq_l;
         char *fmt = i < 3 ? FMT_SPE : FMT_NUM;
         int   off = i < 3 ? i + 10  : i - 3;
 
-        ret = snprintf(NULL, 0, fmt, off, pal[i]);
-
-        if (ret < 0) {
-            printf("failed to construct sequences\n");
-            exit(1);
-        }
-
-        seq_l = strlen(seq);
-
-        if (seq_l + ret > MAX_SEQ + 1) {
-            printf("sequences exceed maximum\n");
-            exit(1);
-        }
-
-        ret = snprintf(seq + seq_l, ret, fmt, off, pal[i]);
+        len = seq_add(&seq, len, fmt, off, pal[i]);
     }
 
-    seq[MAX_SEQ] = 0;
+    return seq;
 }
 
-static void pal_write() {
+static void pal_write(char *seq) {
     glob_t buf;
 
     glob(PTS_GLOB, GLOB_NOSORT, NULL, &buf);
@@ -114,11 +123,20 @@ static void pal_write() {
         }
     }
 
+    FILE *f = fopen("/tmp/paleta", "w");
+
+    if (f) {
+        fprintf(f, "%s", seq);
+        fclose(f);
+    }
+
+    free(seq);
     globfree(&buf);
 }
 
 int main(int argc, char **argv) {
     int ret = 0;
+    char *seq;
 
     if (argc > 1 && *++argv[1]) {
         ret = argv[1][0];
@@ -131,8 +149,8 @@ int main(int argc, char **argv) {
 
         case 0:
             ret = pal_read();
-            pal_morph(ret);
-            pal_write();
+            seq = pal_morph(ret);
+            pal_write(seq);
             break;
 
         default:
