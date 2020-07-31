@@ -4,18 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "config.h"
+#include "paleta.h"
 
-static int   pal_read(void);
-static char *pal_morph(const int max_cols);
-static void  pal_write(char *seq);
-
-static size_t seq_add(char **seq, const size_t len, const char *fmt,
-                      const int off, const char *col);
-
-static char pal[MAX_PAL][MAX_COL + 1];
-
-static int pal_read() {
+void pal_read() {
     char *line = 0;
     int i = 0;
 
@@ -59,55 +50,52 @@ static int pal_read() {
     printf("read 3 special colors\n");
     printf("read %d/%d colors\n", i - 3, MAX_PAL -3);
 
-    return i;
+    pal_morph(i);
 }
 
-static size_t seq_add(char **seq, const size_t len, const char *fmt,
-                      const int off, const char *col) {
+void seq_add(struct sequences *seq, const char *fmt,
+             const int off, const char *col) {
     int ret;
 
     ret = snprintf(NULL, 0, fmt, off, col);
 
+    if (seq->size + ret >= seq->cap) {
+        seq->cap = seq->cap ? seq->cap * 2 : 18;
+        seq->str = realloc(seq->str, seq->cap);
+
+        if (!seq->str) {
+            printf("failed to allocate memory\n");
+            exit(1);
+        }
+    }
+
+    ret = snprintf(seq->str + seq->size, ret, fmt, off, col);
+
     if (ret < 0) {
         printf("failed to construct sequences\n");
         exit(1);
     }
 
-    /* todo: not every element */
-    *seq = realloc(*seq, len + ret);
-
-    if (!*seq) {
-        printf("failed to allocate memory\n");
-        exit(1);
-    }
-
-    ret = snprintf(*seq + len, ret, fmt, off, col);
-
-    if (ret < 0) {
-        printf("failed to construct sequences\n");
-        exit(1);
-    }
-
-    return strlen(*seq);
+    seq->size += ret - 1;
 }
 
-static char *pal_morph(const int max_cols) {
-    char *seq = NULL;
-    int len = 0;
+void pal_morph(const int max_cols) {
+    struct sequences seq = {0};
 
-    len = seq_add(&seq, 0, FMT_708, 708, pal[0]);
+    seq_add(&seq, FMT_708, 708, pal[0]);
 
     for (int i = 0; i < max_cols; i++) {
         char *fmt = i < 3 ? FMT_SPE : FMT_NUM;
         int   off = i < 3 ? i + 10  : i - 3;
 
-        len = seq_add(&seq, len, fmt, off, pal[i]);
+        seq_add(&seq, fmt, off, pal[i]);
     }
 
-    return seq;
+    pal_write(&seq);
+    free(seq.str);
 }
 
-static void pal_write(char *seq) {
+void pal_write(struct sequences *seq) {
     glob_t buf;
 
     glob(PTS_GLOB, GLOB_NOSORT, NULL, &buf);
@@ -116,20 +104,24 @@ static void pal_write(char *seq) {
         FILE *file = fopen(buf.gl_pathv[i], "w");
 
         if (file) {
-            fprintf(file, "%s", seq);
+            fprintf(file, "%s", seq->str);
             fclose(file);
 
             printf("sent output to %s\n", buf.gl_pathv[i]);
         }
     }
 
-    free(seq);
+    FILE *f = fopen("/tmp/paleta", "w");
+    if (f) {
+        fprintf(f, "%s", seq->str);
+        fclose(f);
+    }
+
     globfree(&buf);
 }
 
 int main(int argc, char **argv) {
     int ret = 0;
-    char *seq;
 
     if (argc > 1 && *++argv[1]) {
         ret = argv[1][0];
@@ -140,11 +132,10 @@ int main(int argc, char **argv) {
             printf("paleta 0.1.0\n");
             break;
 
-        case 0:
-            ret = pal_read();
-            seq = pal_morph(ret);
-            pal_write(seq);
+        case 0: {
+            pal_read();
             break;
+        }
 
         default:
             printf("usage: paleta -[hv] <stdin>\n\n");
