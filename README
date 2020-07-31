@@ -15,10 +15,4 @@ ________________________________________________________________________________
 |   $ cmd | paleta                                                             |
 |   $ paleta <<EOF                                                             |
 |                                                                              |
-|                                                                              |
-| Loading the palette (in your .shellrc file) (pick one).                      |
-|                                                                              |
-|   $ paleta -r                                                                |
-|   $ (cat "$HOME/conf/cache/paleta/colors" 2>/dev/null &)                     |
-|                                                                              |
 +------------------------------------------------------------------------------+
