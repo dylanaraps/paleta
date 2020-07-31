@@ -123,13 +123,6 @@ static void pal_write(char *seq) {
         }
     }
 
-    FILE *f = fopen("/tmp/paleta", "w");
-
-    if (f) {
-        fprintf(f, "%s", seq);
-        fclose(f);
-    }
-
     free(seq);
     globfree(&buf);
 }
