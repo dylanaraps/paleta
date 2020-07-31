@@ -11,8 +11,8 @@ ________________________________________________________________________________
 |                                                                              |
 | Input is [#]000000\\n over stdin in the following order.                     |
 |                                                                              |
-|     1 <background>                                                           |
-|     2 <foreground>                                                           |
+|     1 <foreground>                                                           |
+|     2 <background>                                                           |
 |     3 <cursor>                                                               |
 |     4 <color0>                                                               |
 |     5 <color1>                                                               |
