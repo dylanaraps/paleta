@@ -6,12 +6,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#define MAX_PAL 259   /* 3 + 256 */
-#define MAX_COL 7
-#define MAX_SEQ 20
-
-#define PTS_DIR  "/dev/pts"
-#define PTS_GLOB "[0-9]*"
+#include "config.h"
 
 static char palette[MAX_PAL][MAX_COL];
 
@@ -85,11 +80,13 @@ static char *pal_morph(const int max_cols) {
     for (int i = 0; i < max_cols; i++) {
         if (i < 3) {
             ret = snprintf(seq + strlen(seq), MAX_SEQ,
-                    "\033]%d;#%s\033\\", i +10, palette[i]);
+                FMT_SPE, i + 10, palette[i]);
         } else {
             ret = snprintf(seq + strlen(seq), MAX_SEQ,
-                    "\033]4;%d;#%s\033\\", i - 3, palette[i]);
+                FMT_NUM, i - 3, palette[i]);
         }
+
+        printf("%d\n", ret);
 
         if (ret < 0) {
             printf("failed to construct sequences\n");
@@ -146,15 +143,15 @@ int main(int argc, char **argv) {
     }
 
     switch (ret) {
-        case 'v':
-            printf("paleta 0.1.0\n");
-            break;
-
         case 'h':
             printf("usage: paleta -[hv] <stdin>\n\n");
             printf("send [#]ffffff\\n over <stdin>.\n");
-            printf("lines 1-3 are bg, fg, and cursor.\n");
-            printf("lines 4-%d are the numerical palette.\n", MAX_PAL);
+            printf("- lines 1-3   = bg, fg, and cursor.\n");
+            printf("- lines 4-%d = palette (0-%d).\n", MAX_PAL, MAX_PAL - 3);
+            break;
+
+        case 'v':
+            printf("paleta 0.1.0\n");
             break;
 
         default:
