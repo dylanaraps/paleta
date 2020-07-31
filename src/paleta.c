@@ -85,13 +85,13 @@ void pal_morph(const int max_cols) {
         .cap = 18, /* most frequent size */
     };
 
+    char *fmt_spe = "\033]%d;#%s\033\\\\";
+    char *fmt_pal = "\033]4;%d;#%s\033\\\\";
+
     seq_add(&seq, "\033]%d;#%s\033\\\\", 708, pal[0]);
 
     for (int i = 0; i < max_cols; i++) {
-        char *fmt = i < 3
-            ? "\033]%d;#%s\033\\\\"
-            : "\033]4;%d;#%s\033\\\\";
-
+        char *fmt = i < 3 ? fmt_spe : fmt_pal;
         int off = i < 3 ? i + 10 : i - 3;
 
         seq_add(&seq, fmt, off, pal[i]);
