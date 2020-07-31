@@ -129,7 +129,7 @@ int main(int argc, char **argv) {
 
     switch (flag) {
         case 'v':
-            msg("paleta 0.1.0");
+            msg("paleta 0.2.0");
             break;
 
         case 0: {
