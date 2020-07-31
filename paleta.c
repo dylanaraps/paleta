@@ -8,11 +8,11 @@
 
 #include "config.h"
 
-static char palette[MAX_PAL][MAX_COL];
-
 static int   pal_read(void);
 static char *pal_morph(const int max_cols);
 static void  pal_write(char *seq);
+
+static char palette[MAX_PAL][MAX_COL];
 
 static int pal_read() {
     char *line = 0;
@@ -78,15 +78,13 @@ static char *pal_morph(const int max_cols) {
     }
 
     for (int i = 0; i < max_cols; i++) {
-        if (i < 3) {
-            ret = snprintf(seq + strlen(seq), MAX_SEQ,
-                FMT_SPE, i + 10, palette[i]);
-        } else {
-            ret = snprintf(seq + strlen(seq), MAX_SEQ,
-                FMT_NUM, i - 3, palette[i]);
-        }
-
-        printf("%d\n", ret);
+        ret = snprintf(
+                seq + strlen(seq),
+                MAX_SEQ,
+                i < 3 ? FMT_SPE : FMT_NUM,
+                i < 3 ? i + 10 : i - 3,
+                palette[i]
+              );
 
         if (ret < 0) {
             printf("failed to construct sequences\n");
@@ -122,12 +120,10 @@ static void pal_write(char *seq) {
 
         file = fopen(dp->d_name, "w");
 
-        if (!file) {
-            continue;
+        if (file) {
+            fprintf(file, "%s", seq);
+            fclose(file);
         }
-
-        fprintf(file, "%s", seq);
-        fclose(file);
     }
 
     free(seq);
