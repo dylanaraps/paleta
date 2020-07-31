@@ -12,6 +12,6 @@ void pal_read(void);
 void pal_morph(const int max_cols);
 void pal_write(struct sequences *seq);
 
-void seq_add(struct sequences *seq, const char *fmt, \
+void seq_add(struct sequences *seq, const char *fmt,
              const int off, const char *col);
 
