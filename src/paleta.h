@@ -6,7 +6,7 @@ struct sequences {
     char *str;
 };
 
-char pal[MAX_PAL][MAX_COL + 1];
+char pal[MAX_PAL + 1][MAX_COL + 1];
 
 void pal_read(void);
 void pal_morph(const int max_cols);
