@@ -2,7 +2,7 @@
 
 PREFIX       = /usr/local
 ALL_WARNINGS = -Wall -Wextra -pedantic -Wmissing-prototypes -Wstrict-prototypes
-ALL_CFLAGS   = $(CFLAGS) $(CPPFLAGS) -O0 -g -static -std=c99 $(ALL_WARNINGS)
+ALL_CFLAGS   = $(CFLAGS) $(CPPFLAGS) -O3 -static -std=c99 $(ALL_WARNINGS)
 ALL_LDFLAGS  = $(LDFLAGS) $(LIBS)
 
 OBJ = src/paleta.o

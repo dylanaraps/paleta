@@ -2,7 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <fcntl.h>
 #include <glob.h>
+#include <unistd.h>
 
 #include "config.h"
 #include "log.h"
@@ -101,11 +103,11 @@ void pal_write(struct sequences *seq) {
     glob(PTS_GLOB, GLOB_NOSORT, NULL, &buf);
 
     for (size_t i = 0; i < buf.gl_pathc; i++) {
-        FILE *file = fopen(buf.gl_pathv[i], "w");
+        int f = open(buf.gl_pathv[i], O_WRONLY | O_NONBLOCK);
 
-        if (file) {
-            fputs(seq->str, file);
-            fclose(file);
+        if (f) {
+            write(f, seq->str, seq->size);
+            close(f);
 
             msg("sent output to %s", buf.gl_pathv[i]);
         }
