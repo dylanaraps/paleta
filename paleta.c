@@ -119,10 +119,6 @@ static void pal_write(char *seq) {
     }
 
     while ((dp = readdir(dir)) != NULL) {
-        if (dp->d_name[0] == '.') {
-            continue;
-        }
-
         if (fnmatch("[0-9]*", dp->d_name, 0) != 0) {
             continue;
         }
