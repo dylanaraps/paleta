@@ -126,13 +126,6 @@ static void pal_write(struct sequences *seq) {
         }
     }
 
-    FILE *f = fopen("/tmp/paleta", "w");
-
-    if (f) {
-        fprintf(f, "%s", seq->str);
-        fclose(f);
-    }
-
     globfree(&buf);
 }
 
