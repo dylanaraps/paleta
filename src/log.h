@@ -1,5 +1,14 @@
+#include <stdio.h>
+#include <stdlib.h>
 
-void _log(const char *, ...);
+#define msg(...) \
+    do { \
+        printf(__VA_ARGS__); \
+        puts(""); \
+    } while (0)
 
-#define msg(...) _log(__VA_ARGS__)
-#define die(...) _log(__VA_ARGS__),exit(1)
+#define die(...) \
+    do { \
+        msg(__VA_ARGS__); \
+        exit(1); \
+    } while (0)

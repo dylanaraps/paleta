@@ -5,8 +5,8 @@ ALL_WARNINGS = -Wall -Wextra -pedantic -Wmissing-prototypes -Wstrict-prototypes
 ALL_CFLAGS   = $(CFLAGS) $(CPPFLAGS) -O0 -g -static -std=c99 $(ALL_WARNINGS)
 ALL_LDFLAGS  = $(LDFLAGS) $(LIBS)
 
-OBJ = src/log.o src/paleta.o
-HDR = src/log.h
+OBJ = src/paleta.o
+HDR =
 
 .c.o:
 	$(CC) $(ALL_CFLAGS) -c -o $@ $<
