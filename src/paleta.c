@@ -118,13 +118,13 @@ void pal_write(struct sequences *seq) {
 }
 
 int main(int argc, char **argv) {
-    int ret = 0;
+    int flag = 0;
 
     if (argc > 1 && *++argv[1]) {
-        ret = argv[1][0];
+        flag = argv[1][0];
     }
 
-    switch (ret) {
+    switch (flag) {
         case 'v':
             msg("paleta 0.1.0");
             break;
