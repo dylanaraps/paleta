@@ -1,65 +1,72 @@
 #define _POSIX_C_SOURCE 200809L
-#include <glob.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <glob.h>
 
-#include "paleta.h"
+#include "config.h"
 
-char *str_to_col(char *str) {
+struct sequences {
     size_t size;
+    size_t cap;
+    char *str;
+};
 
-    if (str[0] == '#') {
-        ++str;
+char pal[MAX_PAL][MAX_COL + 1];
+
+static void pal_read(void);
+static void pal_morph(const int max_cols);
+static void pal_write(struct sequences *seq);
+
+static void seq_add(struct sequences *seq, const char *fmt, \
+             const int off, const char *col);
+
+static void pal_read() {
+    char c;
+    int color = 0;
+    int num = 0;
+
+    while (fscanf(stdin, "%c", &c) != EOF) {
+       if ((c >= 'A' && c <= 'F') ||
+           (c >= 'a' && c <= 'f') ||
+           (c >= '0' && c <= '9')) {
+
+           if (color > MAX_COL) {
+               printf("invalid input found on stdin\n");
+               exit(1);
+           }
+
+           strcpy(&pal[num][color], &c);
+           pal[num][MAX_COL] = 0;
+
+           color++;
+
+       } else if (c == '\n') {
+           if (color < MAX_COL) {
+               printf("invalid input found on stdin\n");
+               exit(1);
+           }
+
+           color = 0;
+           num++;
+
+           if (num > MAX_PAL) {
+               break;
+           }
+
+       } else if (c == '#') {
+           continue;
+
+       } else {
+           printf("invalid input found on stdin\n");
+           exit(1);
+       }
     }
 
-    size = strcspn(str, "\n");
-    str[size] = 0;
-
-    if (size > MAX_COL || size < MAX_COL) {
-        return NULL;
-    }
-
-    return str;
+    pal_morph(num);
 }
 
-void pal_read() {
-    char *line = 0;
-    int i = 0;
-
-    while ((getline(&line, &(size_t){0}, stdin) != -1)) {
-        int ret;
-
-        line = str_to_col(line);
-
-        if (!line) {
-            printf("invalid input found on stdin (line: %d)\n", i + 1);
-            exit(1);
-        }
-
-        ret = snprintf(pal[i], MAX_COL + 1, "%s", line);
-
-        if (ret < MAX_COL) {
-            printf("failed to read input (line: %d\n", i + 1);
-            exit(1);
-        }
-
-        if (++i == MAX_PAL) {
-            break;
-        }
-
-        line = 0;
-    }
-
-    free(line);
-
-    printf("read 3 special colors\n");
-    printf("read %d/%d colors\n", i - 3, MAX_PAL -3);
-
-    pal_morph(i);
-}
-
-void seq_add(struct sequences *seq, const char *fmt,
+static void seq_add(struct sequences *seq, const char *fmt,
              const int off, const char *col) {
     int ret;
 
@@ -85,7 +92,7 @@ void seq_add(struct sequences *seq, const char *fmt,
     seq->size += ret - 1;
 }
 
-void pal_morph(const int max_cols) {
+static void pal_morph(const int max_cols) {
     struct sequences seq = {
         .cap = 18, /* most frequent size */
     };
@@ -103,7 +110,7 @@ void pal_morph(const int max_cols) {
     free(seq.str);
 }
 
-void pal_write(struct sequences *seq) {
+static void pal_write(struct sequences *seq) {
     glob_t buf;
 
     glob(PTS_GLOB, GLOB_NOSORT, NULL, &buf);
@@ -117,6 +124,13 @@ void pal_write(struct sequences *seq) {
 
             printf("sent output to %s\n", buf.gl_pathv[i]);
         }
+    }
+
+    FILE *f = fopen("/tmp/paleta", "w");
+
+    if (f) {
+        fprintf(f, "%s", seq->str);
+        fclose(f);
     }
 
     globfree(&buf);
