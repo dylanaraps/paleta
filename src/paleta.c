@@ -147,10 +147,9 @@ int main(int argc, char **argv) {
             msg("paleta 0.2.0");
             break;
 
-        case 0: {
+        case 0:
             pal_read();
             break;
-        }
 
         default:
             msg("usage: paleta -[hv] <stdin>\n");
