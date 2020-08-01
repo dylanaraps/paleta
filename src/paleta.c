@@ -86,13 +86,15 @@ void pal_morph(const int max_cols) {
 
     /* see: 1a651cf990e67c4046fbff7674249259bcaa89a8 */
     seq_add(&seq, "\033]%d;#%s\033\\\\", 708, pal[1]);
+    seq_add(&seq, fmt_spe, 12, pal[2]);
 
     for (int i = 3; i < max_cols; i++) {
         seq_add(&seq, fmt_pal, i - 3, pal[i]);
 
         /* some terminals require that these sequences go
          * after colors 0-16. other terminals flicker if
-         * these sequences are sent too late */
+         * these sequences are sent too late. send them
+         * as soon as possible */
         switch (i - 3) {
             case 0:
                 /* background */
@@ -102,7 +104,6 @@ void pal_morph(const int max_cols) {
             case 15:
                 /* foreground, cursor */
                 seq_add(&seq, fmt_spe, 10, pal[0]);
-                seq_add(&seq, fmt_spe, 12, pal[2]);
                 break;
         }
     }
