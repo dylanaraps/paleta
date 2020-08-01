@@ -13,4 +13,3 @@ void pal_morph(const int );
 void pal_write(struct buf *);
 
 void seq_add(struct buf *, const char *, const int, const char *);
-
