@@ -6,4 +6,4 @@ jobs:
         steps:
             - uses: actions/checkout@v1
             - name: Run build.
-              run: make -B && ./paleta < palettes/base16-default-dark
+              run: make -B
