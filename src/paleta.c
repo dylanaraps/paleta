@@ -71,7 +71,7 @@ void seq_add(struct buf *seq, const char *fmt, const int off, const char *col) {
         die("failed to construct sequences");
     }
 
-    seq->size += ret; /* why */
+    seq->size += ret;
 }
 
 void pal_morph(const int max_cols) {
