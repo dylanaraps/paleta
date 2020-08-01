@@ -61,7 +61,7 @@ alacritty | no issues. [1]
       vte | no issues. [2]
     hyper | unsupported. issue closed. misunderstood for \033[3Xm [3]
 
-[0] https://st.suckless.org/patches/osc_10_11_12/st-osc_10_11_12-20200418-66520e1.diff
+[0] ./misc/st-osc_10_11_12-20200418-66520e1.patch
 [1] https://github.com/alacritty/alacritty/issues/656
 [2] all up-to-date vte based terminals.
 [3] https://github.com/vercel/hyper/issues/2038

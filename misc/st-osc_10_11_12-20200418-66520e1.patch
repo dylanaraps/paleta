@@ -1,0 +1,80 @@
+Source: https://st.suckless.org/patches/osc_10_11_12/
+
+This patch adds support for OSC escape sequences 10, 11 and 12,
+that modify the bg, fg and cursor colors. To decouple them from
+the palette you can select entries from the colorname table after
+the 255 position for defaultfg, defaultbg and defaultcs.
+
+Original author:
+    Christian Tenllado - <ctenllado at gmail dot com>
+
+Changelog:
+    * Fixed bg flicker when setting both 0 and bg.
+
+---
+diff --git a/config.def.h b/config.def.h
+index 6f05dce..a4f021e 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -129,8 +129,8 @@ static const char *colorname[] = {
+  */
+ unsigned int defaultfg = 7;
+ unsigned int defaultbg = 0;
+-static unsigned int defaultcs = 256;
+-static unsigned int defaultrcs = 257;
++unsigned int defaultcs = 256;
++unsigned int defaultrcs = 257;
+
+ /*
+  * Default shape of cursor
+diff --git a/st.c b/st.c
+index 76b7e0d..6898aae 100644
+--- a/st.c
++++ b/st.c
+@@ -1870,12 +1870,23 @@ strhandle(void)
+ 			}
+ 			return;
+ 		case 4: /* color set */
+-			if (narg < 3)
++		case 10: /* foreground set */
++		case 11: /* background set */
++		case 12: /* cursor color */
++			if ((par == 4 && narg < 3) || narg < 2)
+ 				break;
+-			p = strescseq.args[2];
++			p = strescseq.args[((par == 4) ? 2 : 1)];
+ 			/* FALLTHROUGH */
+ 		case 104: /* color reset, here p = NULL */
+-			j = (narg > 1) ? atoi(strescseq.args[1]) : -1;
++			if (par == 10)
++				j = defaultfg;
++			else if (par == 11)
++				j = defaultbg;
++			else if (par == 12)
++				j = defaultcs;
++			else
++				j = (narg > 1) ? atoi(strescseq.args[1]) : -1;
++
+ 			if (xsetcolorname(j, p)) {
+ 				if (par == 104 && narg <= 1)
+ 					return; /* color reset without parameter */
+@@ -1886,7 +1897,9 @@ strhandle(void)
+ 				 * TODO if defaultbg color is changed, borders
+ 				 * are dirty
+ 				 */
+-				redraw();
++                if (j != 0 && j != 15) {
++                    redraw();
++                }
+ 			}
+ 			return;
+ 		}
+diff --git a/st.h b/st.h
+index 3d351b6..054366d 100644
+--- a/st.h
++++ b/st.h
+@@ -123,3 +123,4 @@ extern char *termname;
+ extern unsigned int tabspaces;
+ extern unsigned int defaultfg;
+ extern unsigned int defaultbg;
++extern unsigned int defaultcs;
