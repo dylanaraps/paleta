@@ -42,40 +42,37 @@ ________________________________________________________________________________
 +------------------------------------------------------------------------------+
 |                                                                              |
 |                                                                              |
-|  $ paleta < palettes/solarized-dark > ~/current_palette                      |
+|  1. Setting the colorscheme.                                                 |
+|                                                                              |
+|     $ paleta < palettes/solarized-dark > ~/current_palette                   |
 |                                                                              |
 |                                                                              |
-|  Input is [#]000000\\n over stdin in the following order.                    |
+|     Input is [#]000000\\n over stdin in the following order.                 |
 |                                                                              |
-|     1 <foreground>                                                           |
-|     2 <background>                                                           |
-|     3 <cursor>                                                               |
-|     4 <color0>                                                               |
-|     5 <color1>                                                               |
-|     6 <color2>                                                               |
+|        1 <foreground>                                                        |
+|        2 <background>                                                        |
+|        3 <cursor>                                                            |
+|        4 <color0>                                                            |
+|        5 <color1>                                                            |
+|        6 <color2>                                                            |
 |                                                                              |
 |       ...                                                                    |
 |                                                                              |
-|   259 <color256>                                                             |
+|      259 <color256>                                                          |
+|                                                                              |
+|     Output over stdout is the resulting set of sequences.                    |
 |                                                                              |
 |                                                                              |
-|  Output over stdout is the resulting set of sequences.                       |
+|  2. Making the colorscheme work with new terminals                           |
 |                                                                              |
 |                                                                              |
-+------------------------------------------------------------------------------+
-
-
-applying colorscheme to new terminals
-________________________________________________________________________________
-
-+------------------------------------------------------------------------------+
+|     In your shell's startup file (.bashrc, .zshrc, etc).                     |
 |                                                                              |
+|        1                                                                     |
+|        2 cat ~/current_palette                                               |
+|        3                                                                     |
 |                                                                              |
-|  In your shell's startup file (.bashrc, .zshrc, etc).                        |
-|                                                                              |
-|     1                                                                        |
-|     2 cat ~/current_palette                                                  |
-|     3                                                                        |
+|     This is the path to the file containing the sequences as set above.      |
 |                                                                              |
 |                                                                              |
 +------------------------------------------------------------------------------+
