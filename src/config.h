@@ -6,4 +6,5 @@
 #define MAX_COL 6
 
 /* file glob to match for directory entries */
+/* macOS: /dev/ttys00[0-9] */
 #define PTS_GLOB "/dev/pts/[0-9]*"

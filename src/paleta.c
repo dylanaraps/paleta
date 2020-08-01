@@ -122,8 +122,6 @@ void pal_write(struct sequences *seq) {
         if (f) {
             write(f, seq->str, seq->size);
             close(f);
-
-            msg("sent output to %s", buf.gl_pathv[i]);
         }
     }
 
