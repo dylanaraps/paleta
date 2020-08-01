@@ -57,6 +57,8 @@ ________________________________________________________________________________
 alacritty | no issues. [0]
     urxvt | no issues.
       vte | no issues. [1]
+    hyper | unsupported. issue closed. misunderstood for \033[3Xm [2]
 
 [0] https://github.com/alacritty/alacritty/issues/656
-[0] all up-to-date vte based terminals.
+[1] all up-to-date vte based terminals.
+[2] https://github.com/vercel/hyper/issues/2038
