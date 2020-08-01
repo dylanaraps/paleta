@@ -87,11 +87,13 @@ void pal_morph(const int max_cols) {
     /* see: 1a651cf990e67c4046fbff7674249259bcaa89a8 */
     seq_add(&seq, "\033]%d;#%s\033\\\\", 708, pal[1]);
 
-    for (int i = 0; i < max_cols; i++) {
-        char *fmt = i < 3 ? fmt_spe : fmt_pal;
-        int off = i < 3 ? i + 10 : i - 3;
+    /* foreground, background, cursor */
+    seq_add(&seq, fmt_spe, 10, pal[0]);
+    seq_add(&seq, fmt_spe, 11, pal[1]);
+    seq_add(&seq, fmt_spe, 12, pal[2]);
 
-        seq_add(&seq, fmt, off, pal[i]);
+    for (int i = 3; i < max_cols; i++) {
+        seq_add(&seq, fmt_pal, i - 3, pal[i]);
     }
 
     pal_write(&seq);
