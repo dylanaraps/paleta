@@ -145,9 +145,6 @@ int main(int argc, char **argv) {
 
         default:
             msg("usage: paleta -[hv] <stdin>\n");
-            msg("send [#]ffffff\\n over <stdin>.");
-            msg("- lines 1-3   = fg, bg, and cursor.");
-            msg("- lines 4-%d = palette (0-%d).", MAX_PAL, MAX_PAL - 3);
             break;
     }
 
