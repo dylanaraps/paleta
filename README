@@ -9,18 +9,18 @@ ________________________________________________________________________________
 
 +------------------------------------------------------------------------------+
 |                                                                              |
-| 1 C99                                                                        |
-| 2 POSIX C library                                                            |
-| 3 A terminal with 'ESC ] 10;Pt ST', 'ESC ] 11;Pt ST', etc                    |
+|  1. C99                                                                      |
+|  2. POSIX C library                                                          |
+|  3. A terminal with 'ESC ] 10;Pt ST', 'ESC ] 11;Pt ST', etc                  |
 |                                                                              |
-| terminal support                                                             |
+|  terminal support                                                            |
 |                                                                              |
-| - st         patch       ./misc/st-osc_10_11_12-20200418-66520e1.patch       |
-| - hyper      clueless    https://github.com/vercel/hyper/issues/2038         |
-| - alacritty  good        https://github.com/alacritty/alacritty/issues/656   |
-| - vte        good        1a651cf990e67c4046fbff7674249259bcaa89a8            |
-| - xterm      good                                                            |
-| - urxvt      good                                                            |
+|  - st         patch       ./misc/st-osc_10_11_12-20200418-66520e1.patch      |
+|  - hyper      clueless    https://github.com/vercel/hyper/issues/2038        |
+|  - alacritty  good        https://github.com/alacritty/alacritty/issues/656  |
+|  - vte        good        1a651cf990e67c4046fbff7674249259bcaa89a8           |
+|  - xterm      good                                                           |
+|  - urxvt      good                                                           |
 |                                                                              |
 +------------------------------------------------------------------------------+
 
@@ -30,8 +30,8 @@ ________________________________________________________________________________
 
 +------------------------------------------------------------------------------+
 |                                                                              |
-| 1 make                                                                       |
-| 2 make DESTDIR="" PREFIX="" install                                          |
+|  $ make                                                                      |
+|  $ make DESTDIR="" PREFIX="" install                                         |
 |                                                                              |
 +------------------------------------------------------------------------------+
 
