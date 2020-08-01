@@ -140,7 +140,7 @@ int main(int argc, char **argv) {
         pal_read();
 
     } else if (*++argv[1] == 'v') {
-        msg("paleta 0.2.0");
+        msg("paleta 1.0.0");
 
     } else {
         msg("usage: paleta -[hv] <stdin>");
