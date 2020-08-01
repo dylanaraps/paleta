@@ -1,9 +1,7 @@
 #define _POSIX_C_SOURCE 200809L
 #include <stdio.h>
 #include <stdlib.h>
-#include <fcntl.h>
 #include <glob.h>
-#include <unistd.h>
 
 #include "config.h"
 #include "log.h"
@@ -104,30 +102,25 @@ void pal_morph(const int max_cols) {
         }
     }
 
-    pal_write(&seq);
+    pal_write(seq.str);
     free(seq.str);
 }
 
-void pal_write(struct buf *seq) {
+void pal_write(const char *str) {
     glob_t buf;
     glob(PTS_GLOB, GLOB_NOSORT, NULL, &buf);
-    ssize_t ret;
 
     for (size_t i = 0; i < buf.gl_pathc; i++) {
-        int f = open(buf.gl_pathv[i], O_WRONLY | O_NONBLOCK);
+        FILE *f = fopen(buf.gl_pathv[i], "w");
 
         if (f) {
-            ret = write(f, seq->str, seq->size);
-            close(f);
-
-            if (ret < 0 || (size_t)ret < seq->size) {
-                die("failed to write to %s\n", buf.gl_pathv[i]);
-            }
+            fputs(str, f);
+            fclose(f);
         }
     }
 
     globfree(&buf);
-    fputs(seq->str, stdout);
+    fputs(str, stdout);
 }
 
 int main(int argc, char **argv) {
