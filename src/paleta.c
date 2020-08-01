@@ -63,7 +63,6 @@ void seq_add(struct sequences *seq, const char *fmt,
 
         if (!seq->str) {
             die("failed to allocate memory");
-            exit(1);
         }
     }
 
