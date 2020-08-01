@@ -53,12 +53,15 @@ ________________________________________________________________________________
           |
        st | no support for 'ESC ] 10;Pt ST', 'ESC ] 11;Pt ST', 'ESC ] 12;Pt ST'.
           | background/foreground are determined based on colors 0 + 15 instead.
+          | patch: [0]
           |
-alacritty | no issues. [0]
+          |
+alacritty | no issues. [1]
     urxvt | no issues.
-      vte | no issues. [1]
-    hyper | unsupported. issue closed. misunderstood for \033[3Xm [2]
+      vte | no issues. [2]
+    hyper | unsupported. issue closed. misunderstood for \033[3Xm [3]
 
-[0] https://github.com/alacritty/alacritty/issues/656
-[1] all up-to-date vte based terminals.
-[2] https://github.com/vercel/hyper/issues/2038
+[0] https://st.suckless.org/patches/osc_10_11_12/st-osc_10_11_12-20200418-66520e1.diff
+[1] https://github.com/alacritty/alacritty/issues/656
+[2] all up-to-date vte based terminals.
+[3] https://github.com/vercel/hyper/issues/2038
