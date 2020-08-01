@@ -11,7 +11,7 @@
 #include "paleta.h"
 
 void pal_read() {
-    char c;
+    int c;
     int color = 0;
     int num = 0;
 
@@ -79,8 +79,8 @@ void pal_morph(const int max_cols) {
         .cap = 18, /* most frequent size */
     };
 
-    char *fmt_spe = "\033]%d;#%s\033\\\\";
-    char *fmt_pal = "\033]4;%d;#%s\033\\\\";
+    const char *fmt_spe = "\033]%d;#%s\033\\\\";
+    const char *fmt_pal = "\033]4;%d;#%s\033\\\\";
 
     seq_add(&seq, "\033]%d;#%s\033\\\\", 708, pal[1]);
     seq_add(&seq, fmt_spe, 12, pal[2]);
@@ -122,8 +122,8 @@ void pal_write(struct buf *seq) {
         }
     }
 
-    fputs(seq->str, stdout);
     globfree(&buf);
+    fputs(seq->str, stdout);
 }
 
 int main(int argc, char **argv) {
