@@ -1,7 +1,6 @@
 #define _POSIX_C_SOURCE 200809L
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <fcntl.h>
 #include <glob.h>
 #include <unistd.h>
@@ -112,13 +111,18 @@ void pal_morph(const int max_cols) {
 void pal_write(struct buf *seq) {
     glob_t buf;
     glob(PTS_GLOB, GLOB_NOSORT, NULL, &buf);
+    ssize_t ret;
 
     for (size_t i = 0; i < buf.gl_pathc; i++) {
         int f = open(buf.gl_pathv[i], O_WRONLY | O_NONBLOCK);
 
         if (f) {
-            write(f, seq->str, seq->size);
+            ret = write(f, seq->str, seq->size);
             close(f);
+
+            if (ret < 0 || (size_t)ret < seq->size) {
+                die("failed to write to %s\n", buf.gl_pathv[i]);
+            }
         }
     }
 
