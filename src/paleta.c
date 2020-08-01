@@ -112,7 +112,6 @@ void pal_morph(const int max_cols) {
 
 void pal_write(struct buf *seq) {
     glob_t buf;
-
     glob(PTS_GLOB, GLOB_NOSORT, NULL, &buf);
 
     for (size_t i = 0; i < buf.gl_pathc; i++) {
@@ -124,6 +123,7 @@ void pal_write(struct buf *seq) {
         }
     }
 
+    fputs(seq->str, stdout);
     globfree(&buf);
 }
 
