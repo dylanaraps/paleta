@@ -136,25 +136,16 @@ static void pal_read(void) {
 }
 
 int main(int argc, char **argv) {
-    int flag = 0;
+    if (argc < 2) {
+        pal_read();
 
-    if (argc > 1 && *++argv[1]) {
-        flag = argv[1][0];
+    } else if (*++argv[1] == 'v') {
+        msg("paleta 0.2.0");
+
+    } else {
+        msg("usage: paleta -[hv] <stdin>");
     }
 
-    switch (flag) {
-        case 'v':
-            msg("paleta 0.2.0");
-            break;
-
-        case 0:
-            pal_read();
-            break;
-
-        default:
-            msg("usage: paleta -[hv] <stdin>\n");
-            break;
-    }
 
     return 0;
 }
