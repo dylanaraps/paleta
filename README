@@ -31,7 +31,7 @@ ________________________________________________________________________________
 
 +------------------------------------------------------------------------------+
 |                                                                              |
-| Input is [#]000000\\n over stdin in the following order.                     |
+|  Input is [#]000000\\n over stdin in the following order.                    |
 |                                                                              |
 |     1 <foreground>                                                           |
 |     2 <background>                                                           |
@@ -52,7 +52,7 @@ terminal support
 ________________________________________________________________________________
           |
        st | no support for 'ESC ] 10;Pt ST', 'ESC ] 11;Pt ST', 'ESC ] 12;Pt ST'.
-          | background is determined based on color 0 instead.
+          | background/foreground are determined based on colors 0 + 15 instead.
           |
 alacritty | no issues.
     urxvt | no issues.
