@@ -71,7 +71,7 @@ void seq_add(struct buf *seq, const char *fmt, const int off, const char *col) {
         die("failed to construct sequences");
     }
 
-    seq->size += ret - 1;
+    seq->size += ret - 1; /* why */
 }
 
 void pal_morph(const int max_cols) {
@@ -82,7 +82,6 @@ void pal_morph(const int max_cols) {
     char *fmt_spe = "\033]%d;#%s\033\\\\";
     char *fmt_pal = "\033]4;%d;#%s\033\\\\";
 
-    /* see: 1a651cf990e67c4046fbff7674249259bcaa89a8 */
     seq_add(&seq, "\033]%d;#%s\033\\\\", 708, pal[1]);
     seq_add(&seq, fmt_spe, 12, pal[2]);
 

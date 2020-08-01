@@ -3,7 +3,7 @@
 
 #define msg(...) \
     do { \
-        printf(__VA_ARGS__); \
+        fprintf(stderr, __VA_ARGS__); \
         puts(""); \
     } while (0)
 
