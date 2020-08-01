@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-
 #define msg(...) \
     do { \
         fprintf(stderr, __VA_ARGS__); \
