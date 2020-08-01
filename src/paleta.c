@@ -63,9 +63,13 @@ static void pal_morph(const int max_cols) {
     const char *fmt_spe = "\033]%d;#%s\033\\";
     const char *fmt_pal = "\033]4;%d;#%s\033\\";
 
+    /* border background */
     seq_add(&seq, "\033]%d;#%s\033\\", 708, pal[1]);
+
+    /* cursor */
     seq_add(&seq, fmt_spe, 12, pal[2]);
 
+    /* numerical palette */
     for (int i = 3; i < max_cols; i++) {
         seq_add(&seq, fmt_pal, i - 3, pal[i]);
 
@@ -80,7 +84,7 @@ static void pal_morph(const int max_cols) {
                 break;
 
             case 15:
-                /* foreground, cursor */
+                /* foreground */
                 seq_add(&seq, fmt_spe, 10, pal[0]);
                 break;
         }
