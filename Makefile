@@ -2,8 +2,7 @@
 
 PREFIX       = /usr/local
 ALL_WARNINGS = -Wall -Wextra -pedantic -Wmissing-prototypes -Wstrict-prototypes
-ALL_CFLAGS   = $(CFLAGS) $(CPPFLAGS) -O3 -static -std=c99 $(ALL_WARNINGS)
-ALL_LDFLAGS  = $(LDFLAGS) $(LIBS)
+ALL_CFLAGS   = -std=c99 $(ALL_WARNINGS) -O3 $(CFLAGS) $(CPPFLAGS)
 
 OBJ = src/paleta.o
 HDR =
@@ -12,7 +11,7 @@ HDR =
 	$(CC) $(ALL_CFLAGS) -c -o $@ $<
 
 paleta: $(OBJ)
-	$(CC) $(ALL_CFLAGS) -o $@ $(OBJ) $(ALL_LDFLAGS)
+	$(CC) $(ALL_CFLAGS) -o $@ $(OBJ) $(LDFLAGS)
 
 $(OBJ): $(HDR)
 
