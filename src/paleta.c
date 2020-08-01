@@ -51,8 +51,7 @@ void pal_read() {
     pal_morph(num);
 }
 
-void seq_add(struct sequences *seq, const char *fmt,
-             const int off, const char *col) {
+void seq_add(struct buf *seq, const char *fmt, const int off, const char *col) {
     int ret;
 
     ret = snprintf(NULL, 0, fmt, off, col);
@@ -76,7 +75,7 @@ void seq_add(struct sequences *seq, const char *fmt,
 }
 
 void pal_morph(const int max_cols) {
-    struct sequences seq = {
+    struct buf seq = {
         .cap = 18, /* most frequent size */
     };
 
@@ -111,7 +110,7 @@ void pal_morph(const int max_cols) {
     free(seq.str);
 }
 
-void pal_write(struct sequences *seq) {
+void pal_write(struct buf *seq) {
     glob_t buf;
 
     glob(PTS_GLOB, GLOB_NOSORT, NULL, &buf);

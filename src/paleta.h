@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-struct sequences {
+struct buf {
     size_t size;
     size_t cap;
     char *str;
@@ -9,9 +9,8 @@ struct sequences {
 char pal[MAX_PAL + 1][MAX_COL + 1];
 
 void pal_read(void);
-void pal_morph(const int max_cols);
-void pal_write(struct sequences *seq);
+void pal_morph(const int );
+void pal_write(struct buf *);
 
-void seq_add(struct sequences *seq, const char *fmt,
-             const int off, const char *col);
+void seq_add(struct buf *, const char *, const int, const char *);
 
