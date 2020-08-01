@@ -54,7 +54,7 @@ void pal_read() {
 void seq_add(struct buf *seq, const char *fmt, const int off, const char *col) {
     int ret;
 
-    ret = snprintf(NULL, 0, fmt, off, col);
+    ret = snprintf(NULL, 0, fmt, off, col) + 1;
 
     if (!seq->size || (seq->size + ret) >= seq->cap) {
         seq->cap *= 2;
@@ -71,7 +71,7 @@ void seq_add(struct buf *seq, const char *fmt, const int off, const char *col) {
         die("failed to construct sequences");
     }
 
-    seq->size += ret - 1; /* why */
+    seq->size += ret; /* why */
 }
 
 void pal_morph(const int max_cols) {
@@ -79,10 +79,10 @@ void pal_morph(const int max_cols) {
         .cap = 18, /* most frequent size */
     };
 
-    const char *fmt_spe = "\033]%d;#%s\033\\\\";
-    const char *fmt_pal = "\033]4;%d;#%s\033\\\\";
+    const char *fmt_spe = "\033]%d;#%s\033\\";
+    const char *fmt_pal = "\033]4;%d;#%s\033\\";
 
-    seq_add(&seq, "\033]%d;#%s\033\\\\", 708, pal[1]);
+    seq_add(&seq, "\033]%d;#%s\033\\", 708, pal[1]);
     seq_add(&seq, fmt_spe, 12, pal[2]);
 
     for (int i = 3; i < max_cols; i++) {
