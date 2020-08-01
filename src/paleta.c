@@ -16,7 +16,13 @@ struct buf {
 
 static void pal_write(const char *str) {
     glob_t buf;
-    glob(PTS_GLOB, GLOB_NOSORT, NULL, &buf);
+    int ret;
+
+    ret = glob(PTS_GLOB, GLOB_NOSORT, NULL, &buf);
+
+    if (ret != 0) {
+        die("glob %s failed", PTS_GLOB);
+    }
 
     for (size_t i = 0; i < buf.gl_pathc; i++) {
         FILE *f = fopen(buf.gl_pathv[i], "w");
