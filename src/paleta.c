@@ -24,7 +24,7 @@ void pal_read() {
                 die("invalid input found on stdin");
             }
 
-            memset(&pal[num][color], c, 1);
+            pal[num][color]   = c;
             pal[num][MAX_COL] = 0;
             color++;
 
