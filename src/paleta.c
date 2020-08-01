@@ -146,6 +146,5 @@ int main(int argc, char **argv) {
         msg("usage: paleta -[hv] <stdin>");
     }
 
-
     return 0;
 }
