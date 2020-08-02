@@ -34,9 +34,8 @@ static void pal_read() {
                 die("invalid input found on stdin");
             }
 
-            pal[num][color]   = c;
+            pal[num][color++] = c;
             pal[num][MAX_COL] = 0;
-            color++;
 
         } else if (c == '\n') {
             if (color < MAX_COL) {
