@@ -16,7 +16,7 @@ static char pal[MAX_PAL + 1][MAX_COL + 1];
 
 static void pal_read(void);
 static void pal_morph(const int);
-static void pal_write(struct buf seq);
+static void pal_write(struct buf);
 
 static void seq_add(struct buf *, const char *, const int, const char *);
 
