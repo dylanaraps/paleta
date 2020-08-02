@@ -7,5 +7,5 @@
 #define die(...) \
     do { \
         msg(__VA_ARGS__); \
-        exit(1); \
+        exit(EXIT_FAILURE); \
     } while (0)
