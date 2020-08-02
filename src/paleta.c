@@ -149,10 +149,10 @@ int main(int argc, char **argv) {
         pal_read();
 
     } else if (*++argv[1] == 'v') {
-        msg("paleta 1.0.1");
+        msg("%s 1.0.1", argv[0]);
 
     } else {
-        msg("usage: paleta -[hv] <stdin>");
+        msg("usage: %s -[hv] <stdin>", argv[0]);
     }
 
     return EXIT_SUCCESS;
