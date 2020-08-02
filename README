@@ -132,3 +132,6 @@ The maximum palette is (3 + 256). This is configurable at compile-time.
 todo
 ________________________________________________________________________________
 
+- [ ] Find good 256 color palettes to include. All are currently 16 colors.
+      256 color palettes added to this repository should contain -256 in their
+      filenames.
