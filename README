@@ -106,7 +106,7 @@ load the current palette at launch.
 input format
 ________________________________________________________________________________
 
-Input is one hex color per line. # is optional. The first three lines are
+Input is one hex color per line, without #. The first three lines are
 reserved for <foreground>, <background> and <cursor> with the remaining lines
 filling the numerical palette (0-256).
 

@@ -49,11 +49,8 @@ static void pal_read() {
                 break;
             }
 
-        } else if (c == '#') {
-            continue;
-
         } else {
-            die("invalid input found on stdin");
+            die("invalid input found on stdin: %c", c);
         }
     }
 
