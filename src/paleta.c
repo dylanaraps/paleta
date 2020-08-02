@@ -16,7 +16,7 @@ static char pal[MAX_PAL + 1][MAX_COL + 1];
 
 static void pal_read(void);
 static void pal_morph(const int);
-static void pal_write(const char *);
+static void pal_write(struct buf seq);
 
 static void seq_add(struct buf *, const char *, const int, const char *);
 
@@ -95,11 +95,11 @@ static void pal_morph(const int max_cols) {
         }
     }
 
-    pal_write(seq.str);
+    pal_write(seq);
     free(seq.str);
 }
 
-static void pal_write(const char *str) {
+static void pal_write(struct buf seq) {
     glob_t buf;
     int ret;
 
@@ -109,17 +109,18 @@ static void pal_write(const char *str) {
         die("glob %s failed", PTS_GLOB);
     }
 
+    fwrite(seq.str, 1, seq.size, stdout);
+
     for (size_t i = 0; i < buf.gl_pathc; i++) {
         FILE *f = fopen(buf.gl_pathv[i], "w");
 
         if (f) {
-            fputs(str, f);
+            fwrite(seq.str, 1, seq.size, f);
             fclose(f);
         }
     }
 
     globfree(&buf);
-    fputs(str, stdout);
 }
 
 static void seq_add(struct buf *seq, const char *fmt,
