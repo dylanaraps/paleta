@@ -1,28 +1,56 @@
 paleta
 ________________________________________________________________________________
 
-Change terminal colors on the fly independent of terminal emulator.
+Change terminal colors on-the-fly independent of terminal emulator.
+
+Most terminal emulators support a set of escape sequences which allow for the
+modification of the terminal's color palette. Combined with the ability to write
+to all open terminal devices, this allows for theming in a truly independent way.
+
+Paleta reads a list of colors over <stdin>, transforms the input into the set of
+escape sequences and sends these sequences to every open terminal in the system.
+It additionally prints the sequences to <stdout>.
+
++------------------------------------------------------------------------------+
+|                                                                              |
+|  $ paleta < palettes/jellybeans-dark > ~/.cache/current-palette              |
+|                                                                              |
++------------------------------------------------------------------------------+
+
+This tool is small and generic. It reads input and writes output. Effortless to
+incorporate with the system. This repository also contains 150~ popular palettes
+ready for use with paleta.
 
 
-requirements
+terminal support
 ________________________________________________________________________________
 
 +------------------------------------------------------------------------------+
 |                                                                              |
-|  1. C99                                                                      |
-|  2. POSIX <stdio.h>, <stdlib.h>, <glob.h>                                    |
-|  3. A terminal with 'ESC ] 10;Pt ST', 'ESC ] 11;Pt ST', etc                  |
+|  this list is not complete                                                   |
 |                                                                              |
-|  terminal support                                                            |
 |                                                                              |
-|  - alacritty  good        https://github.com/alacritty/alacritty/issues/656  |
-|  - vte        good        1a651cf990e67c4046fbff7674249259bcaa89a8           |
-|  - xterm      good                                                           |
-|  - urxvt      good                                                           |
-|  - st         patch       ./misc/st-osc_10_11_12-20200418-66520e1.patch      |
-|  - hyper      clueless    https://github.com/vercel/hyper/issues/2038        |
+|  alacritty  good        https://github.com/alacritty/alacritty/issues/656    |
+|  kitty      good                                                             |
+|  vte [0]    good        1a651cf990e67c4046fbff7674249259bcaa89a8             |
+|  xterm      good                                                             |
+|  urxvt      good                                                             |
+|                                                                              |
+|  st         patch       ./misc/st-osc_10_11_12-20200418-66520e1.patch        |
+|                                                                              |
+|  hyper      clueless    https://github.com/vercel/hyper/issues/2038          |
+|                                                                              |
 |                                                                              |
 +------------------------------------------------------------------------------+
+
+[0] vte includes Termite, XFCE terminal, GNOME terminal, Konsole and many more.
+
+
+dependencies
+________________________________________________________________________________
+
+- POSIX <stdio.h> <stdlib.h> <glob.h>
+- C99 compiler
 
 
 build
@@ -30,8 +58,16 @@ ________________________________________________________________________________
 
 +------------------------------------------------------------------------------+
 |                                                                              |
+|  Using make (recommended)                                                    |
+|                                                                              |
 |  $ make                                                                      |
-|  $ make DESTDIR="" PREFIX="" install                                         |
+|  $ make install                                                              |
+|                                                                              |
+|                                                                              |
+|  Invoking the compiler directly                                              |
+|                                                                              |
+|  $ c99 $CFLAGS -o paleta src/paleta.c                                        |
+|                                                                              |
 |                                                                              |
 +------------------------------------------------------------------------------+
 
@@ -41,66 +77,58 @@ ________________________________________________________________________________
 
 +------------------------------------------------------------------------------+
 |                                                                              |
+|  1. Set the colorscheme to jellybeans-dark in all open terminals.            |
 |                                                                              |
-|  1. Setting the colorscheme.                                                 |
+|  $ paleta < palettes/jellybeans-dark > ~/.cache/current-palette              |
 |                                                                              |
-|     $ paleta < palettes/solarized-dark > ~/current_palette                   |
++------------------------------------------------------------------------------+
+
+Saving paleta's <stdout> to a file is how the current palette is stored. This
+file is used to set the palette in newly opened terminals. Scripts might instead
+store this in a variable or ignore it entirely as they maintain state.
+
+
+setup
+________________________________________________________________________________
+
+This line must be added to $SHELL's startup file. It tells future terminals to
+load the current palette at launch.
+
++------------------------------------------------------------------------------+
 |                                                                              |
-|                                                                              |
-|     Input is [#]000000\\n over stdin in the following order.                 |
-|                                                                              |
-|        1 <foreground>                                                        |
-|        2 <background>                                                        |
-|        3 <cursor>                                                            |
-|        4 <color0>                                                            |
-|        5 <color1>                                                            |
-|        6 <color2>                                                            |
-|                                                                              |
-|       ...                                                                    |
-|                                                                              |
-|      259 <color256>                                                          |
-|                                                                              |
-|     Output over stdout is the resulting set of sequences.                    |
-|                                                                              |
-|                                                                              |
-|  2. Making the colorscheme work with new terminals                           |
-|                                                                              |
-|                                                                              |
-|     In your shell's startup file (.bashrc, .zshrc, etc).                     |
-|                                                                              |
-|        1                                                                     |
-|        2 cat ~/current_palette                                               |
-|        3                                                                     |
-|                                                                              |
-|     This is the path to the file containing the sequences as set above.      |
-|                                                                              |
+|  $ echo 'cat ~/.cache/current-palette' >> ~/.bashrc                          |
 |                                                                              |
 +------------------------------------------------------------------------------+
 
 
-palettes
+input format
 ________________________________________________________________________________
 
-This repository contains 150 or so colorschemes for use with paleta. These are
-not installed with the Makefile.
+Input is one hex color per line. # is optional. The first three lines are
+reserved for <foreground>, <background> and <cursor> with the remaining lines
+filling the numerical palette (0-256).
+
++------------------------------------------------------------------------------+
+|  format                             |  example                               |
++-------------------------------------+----------------------------------------+
+|                                     |                                        |
+|  <foreground>                       |  dedede                                |
+|  <background>                       |  121212                                |
+|  <cursor>                           |  dedede                                |
+|  <color0>                           |  929292                                |
+|  <color1>                           |  e27373                                |
+|  <color2>                           |  94b979                                |
+|                                     |                                        |
+|  ...                                |  ,,,                                   |
+|                                     |                                        |
+|  <color256>                         |  1ab2a8                                |
+|                                     |                                        |
+|                                     |                                        |
++-------------------------------------+----------------------------------------+
+
+The maximum palette is (3 + 256). This is configurable at compile-time.
 
 
-contributions
+todo
 ________________________________________________________________________________
 
-Contributions are welcome for palettes, bug fixes and general changes. Features
-are not a priority and requests for features will likely be turned down (unless
-very appealing).
-
-Code style is as follows.
-
-- 4 spaces indentation.
-- Always put braces around for, while, if, whatever.
-- No opening braces on newlines.
-- Restrict scope of variables where it makes sense.
-
-
-cool stuff
-________________________________________________________________________________
-
-Shuffle through colorschemes. https://github.com/dylanaraps/paleta/commit/63be0a915adcc6c6f61e955affd6476dba4c6bab
