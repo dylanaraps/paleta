@@ -129,6 +129,12 @@ filling the numerical palette (0-256).
 The maximum palette is (3 + 256). This is configurable at compile-time.
 
 
+software written around paleta
+________________________________________________________________________________
+
+- shuffle through palettes in a directory. https://github.com/dylanaraps/bin/blob/c06b2c0df0194487fc4cb9c65b451b6369e2c398/shuffle
+
+
 todo
 ________________________________________________________________________________
 
