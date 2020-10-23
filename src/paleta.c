@@ -98,11 +98,8 @@ static void pal_morph(const int max_cols) {
 
 static void pal_write(struct buf seq) {
     glob_t buf;
-    int ret;
 
-    ret = glob(PTS_GLOB, GLOB_NOSORT, NULL, &buf);
-
-    if (ret != 0) {
+    if (glob(PTS_GLOB, GLOB_NOSORT, NULL, &buf) != 0) {
         die("glob %s failed", PTS_GLOB);
     }
 
@@ -122,9 +119,7 @@ static void pal_write(struct buf seq) {
 
 static void seq_add(struct buf *seq, const char *fmt,
                     const int off, const char *col) {
-    int ret;
-
-    ret = snprintf(NULL, 0, fmt, off, col) + 1;
+    int ret = snprintf(NULL, 0, fmt, off, col) + 1;
 
     if (!seq->size || (seq->size + ret) >= seq->cap) {
         seq->cap *= 2;
