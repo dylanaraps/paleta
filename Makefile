@@ -18,6 +18,12 @@ $(OBJ): $(HDR)
 install: paleta
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	cp paleta  $(DESTDIR)$(PREFIX)/bin/
+	mkdir -p $(DESTDIR)$(PREFIX)/share/paleta
+	cp -r palettes/ $(DESTDIR)$(PREFIX)/share/paleta/
+
+uninstall:
+	rm $(DESTDIR)$(PREFIX)/bin/paleta
+	rm -r $(DESTDIR)$(PREFIX)/share/paleta
 
 clean:
 	rm -f paleta $(OBJ)
